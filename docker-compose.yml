@@ -1,0 +1,15 @@
+name: yumkeeper
+
+services:
+  front:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/front
+      - node_modules:/front/node_modules  # 他開発者が git clone した際への対策
+    stdin_open: true
+    tty: true
+
+volumes:
+  node_modules:
