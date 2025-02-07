@@ -1,6 +1,16 @@
+'use client';
+
 import Image from "next/image";
 
 export default function Home() {
+
+  // APIレスポンス取得のハンドラー
+  const handleApiRequest = async () => {
+    const response = await fetch("http://localhost:8080");
+    const text = response.text();
+    console.log(text);
+  }
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -22,6 +32,14 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
+
+        {/* APIリクエストの送信ボタン */}
+        <button
+          onClick={handleApiRequest}
+          className="rounded-full border border-black px-6"
+        >
+          APIリクエスト
+        </button>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
