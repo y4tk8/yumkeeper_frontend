@@ -10,7 +10,7 @@ const eslintConfig = [
   ...compat.extends(
     "next/core-web-vitals",
     "next/typescript",
-    "plugin:prettier/recommended", // Prettierとの競合を防ぐ
+    "prettier"
   ),
   {
     plugins: {
@@ -37,14 +37,11 @@ const eslintConfig = [
       "tailwindcss/no-custom-classname": "off", // カスタムクラスの使用を許容
       "tailwindcss/no-contradicting-classname": "error", // 'w-4 w-8'のような矛盾するclassNameを検出
 
-      // Prettier
-      "prettier/prettier": "warn", // Prettierのルールに違反しているなら警告
-
       // その他
       "eqeqeq": "warn", // 厳密比較を推奨（`===` と `!==`）
       "no-useless-assignment": "warn", // 値が未使用なら代入先の変数に警告
     },
-    ignores: ["node_modules/", ".next/", "dist/", "out/", ".env*", "*.d.ts"],
+    ignores: ["node_modules/", ".next/", "out/", ".env*", "*.d.ts"],
   },
 ];
 

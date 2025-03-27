@@ -5,12 +5,12 @@ services:
   front:
     build: .
     ports:
-      - '3000:3000'
+      - "3000:3000"
     networks:
       - shared_network
     volumes:
       - .:/front
-      - node_modules:/front/node_modules  # 他開発者が git clone した際への対策
+      - node_modules:/front/node_modules # 他開発者が git clone した際への対策
     stdin_open: true
     tty: true
 
