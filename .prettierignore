@@ -1,5 +1,1 @@
-## .gitignore での指定ファイルは自動適用
-
-# Ignore artifacts:
-build
-coverage
+## .gitignore での指定ファイルを自動適用
