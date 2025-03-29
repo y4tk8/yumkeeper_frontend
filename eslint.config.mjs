@@ -33,7 +33,6 @@ const eslintConfig = [
       "react-hooks/exhaustive-deps": "warn", // useEffectの依存配列の設定ミスを警告
 
       // Tailwind
-      "tailwindcss/classnames-order": "warn", // クラスがアルファベット順じゃなければ警告
       "tailwindcss/no-custom-classname": "off", // カスタムクラスの使用を許容
       "tailwindcss/no-contradicting-classname": "error", // 'w-4 w-8'のような矛盾するclassNameを検出
 
