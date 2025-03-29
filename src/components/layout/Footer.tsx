@@ -1,0 +1,7 @@
+export default function Footer() {
+  return (
+    <footer className="p-4 text-center bg-gray-100 shadow-md">
+      <p>&copy; {new Date().getFullYear()} Yum Keeper. All rights reserved.</p>
+    </footer>
+  );
+}
