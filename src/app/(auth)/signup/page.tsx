@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -29,7 +31,7 @@ export default function SingUpPage() {
         <div className="absolute inset-x-4 top-1/2 h-px bg-gray-300"></div>
       </div>
 
-      <Button variant="outline" fullWidth>
+      <Button type="button" variant="outline" fullWidth>
         ゲストとしてサインインする
       </Button>
     </div>
