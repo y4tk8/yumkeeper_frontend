@@ -10,11 +10,7 @@ export const metadata: Metadata = {
                 該当のレシピ動画と一緒に便利に管理できます。「料理レシピは活字より動画派」というあなたにピッタリのサービスです。`,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <body className="bg-gray-100">
