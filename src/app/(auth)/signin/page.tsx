@@ -5,22 +5,27 @@ import Button from "@/components/ui/Button";
 export default function SingUpPage() {
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">サインアップ</h2>
+      <h2 className="text-xl font-semibold">サインイン</h2>
 
       <form className="space-y-4">
         <InputField type="email" placeholder="メールアドレス" />
         <InputField type="password" placeholder="パスワード" />
-        <InputField type="password" placeholder="パスワード確認用" />
+
+        <p className="text-sm text-gray-600">
+          <Link href="/forgot-password" className="text-blue-600 hover:underline">
+            パスワードを忘れた場合はこちら
+          </Link>
+        </p>
 
         <Button type="submit" fullWidth>
-          サインアップ
+          サインイン
         </Button>
       </form>
 
       <div className="flex justify-between text-sm">
-        <span>アカウントをお持ちですか？</span>
-        <Link href="/signin" className="text-blue-600 hover:underline">
-          サインインはこちら
+        <span>アカウントをお持ちではないですか？</span>
+        <Link href="/signup" className="text-blue-600 hover:underline">
+          サインアップはこちら
         </Link>
       </div>
 
