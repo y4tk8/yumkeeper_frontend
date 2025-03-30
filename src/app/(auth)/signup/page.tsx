@@ -12,12 +12,6 @@ export default function SingUpPage() {
         <InputField type="password" placeholder="パスワード" />
         <InputField type="password" placeholder="パスワード確認用" />
 
-        <p className="text-sm text-gray-600">
-          <Link href="/forgot-password" className="text-blue-600 hover:underline">
-            パスワードを忘れた場合はこちら
-          </Link>
-        </p>
-
         <Button type="submit" fullWidth>
           サインアップ
         </Button>
@@ -36,7 +30,7 @@ export default function SingUpPage() {
       </div>
 
       <Button variant="outline" fullWidth>
-        ゲストとしてログインする
+        ゲストとしてサインインする
       </Button>
     </div>
   );
