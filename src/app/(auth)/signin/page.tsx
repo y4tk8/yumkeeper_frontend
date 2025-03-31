@@ -14,7 +14,7 @@ export default function SingInPage() {
         <InputField type="password" placeholder="パスワード" />
 
         <p className="text-sm text-gray-600">
-          <Link href="/forgot-password" className="text-blue-600 hover:underline">
+          <Link href="/password-forgot" className="text-blue-600 hover:underline">
             パスワードを忘れた場合はこちら
           </Link>
         </p>
