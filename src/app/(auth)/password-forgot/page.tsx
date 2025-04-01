@@ -41,8 +41,8 @@ const PasswordForgotPage = () => {
       {/* 注意事項 */}
       <div className="text-sm text-gray-600 space-y-2">
         <ul className="list-disc pl-5">
-          <li>リセットメール送信先のメールアドレスを入力してください。</li>
-          <li>「yumkeeper@example.com」からのメールが受信できるようにしてください。</li>
+          <li>送信先のメールアドレスが正しいことを確認の上、ご入力ください。</li>
+          <li><span className="font-semibold">yumkeeper@example.com</span> からのメールが受信できるようにしてください。</li>
         </ul>
       </div>
 
