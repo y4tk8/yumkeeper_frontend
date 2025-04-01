@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
-const PasswordForgotPage = () => {
+const ResendConfirmationPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // パスワードリセットメール送信のイベントハンドラー
+  // アカウント認証メール再送のイベントハンドラー
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -17,13 +16,13 @@ const PasswordForgotPage = () => {
 
     setTimeout(() => {
       setIsSubmitting(false);
-      alert("パスワードリセットメールを送信しました。");
+      alert("アカウント認証メールを再送しました。");
     }, 2000);
   };
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">パスワードリセット</h2>
+      <h2 className="text-xl font-semibold">アカウント認証メール再送</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <InputField
@@ -34,25 +33,19 @@ const PasswordForgotPage = () => {
           required
         />
         <Button type="submit" fullWidth disabled={isSubmitting}>
-          {isSubmitting ? "送信中..." : "パスワードリセットメールを送信"}
+          {isSubmitting ? "送信中..." : "アカウント認証メールを再送"}
         </Button>
       </form>
 
       {/* 注意事項 */}
       <div className="text-sm text-gray-600 space-y-2">
         <ul className="list-disc pl-5">
-          <li>送信先のメールアドレスが正しいことを確認の上、ご入力ください。</li>
+          <li>再送先のメールアドレスが正しいことを確認の上、ご入力ください。</li>
           <li><span className="font-semibold">yumkeeper@example.com</span> からのメールが受信できるようにしてください。</li>
         </ul>
-      </div>
-
-      <div className="text-right">
-        <Link href="/signin" className="text-blue-600 hover:underline">
-          サインインはこちら
-        </Link>
       </div>
     </div>
   );
 };
 
-export default PasswordForgotPage;
+export default ResendConfirmationPage;
