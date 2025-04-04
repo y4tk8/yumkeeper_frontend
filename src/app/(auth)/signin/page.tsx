@@ -1,17 +1,45 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { apiRequest } from "@/lib/apiClient";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function SingInPage() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // サインイン処理
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
+
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
+
+      router.push("/");
+    } catch (error) {
+      console.error("サインインエラー", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">サインイン</h2>
 
-      <form className="space-y-4">
-        <InputField type="email" placeholder="メールアドレス" />
-        <InputField type="password" placeholder="パスワード" />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <InputField type="email" placeholder="メールアドレス" name="email" />
+        <InputField type="password" placeholder="パスワード" name="password" />
 
         <p className="text-sm text-gray-600">
           <Link href="/password-forgot" className="text-blue-600 hover:underline">
@@ -19,8 +47,8 @@ export default function SingInPage() {
           </Link>
         </p>
 
-        <Button type="submit" fullWidth>
-          サインイン
+        <Button type="submit" fullWidth disabled={isSubmitting}>
+          {isSubmitting ? "処理中..." : "サインイン"}
         </Button>
       </form>
 
