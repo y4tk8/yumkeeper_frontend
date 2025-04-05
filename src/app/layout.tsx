@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Yum Keeper - 料理レシピ保存サービス",
@@ -14,11 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <body className="bg-gray-100">
-        <Header />
-        <main>
-          <Container>{children}</Container>
-        </main>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <main>
+            <Container>{children}</Container>
+          </main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

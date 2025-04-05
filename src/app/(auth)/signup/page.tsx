@@ -8,8 +8,8 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function SingUpPage() {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   // サインアップ処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
