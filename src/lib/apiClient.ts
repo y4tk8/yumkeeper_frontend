@@ -2,22 +2,27 @@ import { API_BASE_URL } from "@/config/api";
 
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export const apiRequest = async <T>(
+interface AuthHeaders {
+  accessToken: string;
+  client: string;
+  uid: string;
+}
+
+export const apiRequest = async (
   path: string,
   method: RequestMethod,
   body?: Record<string, unknown>,
-  authHeaders?: {
-    accessToken: string;
-    client: string;
-    uid: string;
-  }
-): Promise<T> => {
+  authHeaders?: AuthHeaders,
+): Promise<{
+  data: Record<string, unknown>;
+  headers: Headers;
+}> => {
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
 
-  // Devise Token Authの認証ヘッダー
+  // Devise Token Auth の認証情報をリクエストヘッダーに付与
   if (authHeaders) {
     headers["access-token"] = authHeaders.accessToken;
     headers["client"] = authHeaders.client;
@@ -35,5 +40,8 @@ export const apiRequest = async <T>(
     throw new Error(data.errors ? data.errors.full_messages.join(", ") : "APIリクエストに失敗しました")
   }
 
-  return data;
+  return {
+    data,
+    headers: response.headers
+  };
 };
