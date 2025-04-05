@@ -27,6 +27,8 @@ export default function SingInPage() {
     try {
       const { headers } = await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
 
+      // サインイン成功で Devise Token Auth の認証情報がレスポンスヘッダーに返る
+      // 毎回のAPIリクエストで使えるよう Context に追加
       authContext?.setAuthHeaders({
         accessToken: headers.get("access-token") || "",
         client: headers.get("client") || "",
