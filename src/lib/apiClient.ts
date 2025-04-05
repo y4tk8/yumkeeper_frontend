@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/api";
 
-type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 interface AuthHeaders {
   accessToken: string;
