@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/lib/apiClient";
+import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function SingInPage() {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const authContext = useContext(AuthContext);
+  const router = useRouter();
 
   // サインイン処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,7 +25,13 @@ export default function SingInPage() {
     const password = formData.get("password") as string;
 
     try {
-      await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
+      const { headers } = await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
+
+      authContext?.setAuthHeaders({
+        accessToken: headers.get("access-token") || "",
+        client: headers.get("client") || "",
+        uid: headers.get("uid") || "",
+      });
 
       router.push("/");
     } catch (error) {
