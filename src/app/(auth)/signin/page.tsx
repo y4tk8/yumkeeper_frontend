@@ -9,6 +9,8 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function SingInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const authContext = useContext(AuthContext);
   const router = useRouter();
@@ -19,10 +21,6 @@ export default function SingInPage() {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
 
     try {
       const { headers } = await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
@@ -48,8 +46,20 @@ export default function SingInPage() {
       <h2 className="text-xl font-semibold">サインイン</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <InputField type="email" placeholder="メールアドレス" name="email" />
-        <InputField type="password" placeholder="パスワード" name="password" />
+        <InputField
+          type="email"
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <InputField
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
         <p className="text-sm text-gray-600">
           <Link href="/password-forgot" className="text-blue-600 hover:underline">
