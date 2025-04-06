@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useApiClient } from "@/lib/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
@@ -9,17 +10,27 @@ const PasswordChangePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiClient = useApiClient();
 
-  // 現在のパスワード変更のイベントハンドラー
+  // 現在のパスワード変更処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await apiClient("/api/v1/auth/", "PUT", {
+        current_password: currentPassword,
+        password: newPassword,
+        password_confirmation: newPasswordConfirmation,
+      });
       alert("パスワードが変更されました。");
-    }, 2000);
+    } catch (error) {
+      console.error("パスワード変更エラー", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
