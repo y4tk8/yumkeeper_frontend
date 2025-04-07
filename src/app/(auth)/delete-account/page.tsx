@@ -1,24 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { useApiClient } from "@/lib/useApiClient";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const DeleteAccountPage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const authContext = useContext(AuthContext);
+  const router = useRouter();
+  const apiClient = useApiClient();
 
-  // 退会処理のイベントハンドラー
-  // NOTE: 後でfetch処理完成させる
-  const handleDeleteAccount = async () => {
+  // アカウント退会処理
+  const handleDeleteAccount = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
+
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("", {
-        method: "DELETE",
-        headers: {}
-      });
-      const data = await response.json();
-      alert(data.message || "退会処理が完了しました。ご利用ありがとうございました。");
+      await apiClient("/api/v1/auth", "DELETE");
+
+      authContext?.setAuthHeaders(null); // Context と ローカルストレージ の認証情報をクリア
+
+      alert("退会処理が完了しました。ご利用ありがとうございました。");
+      router.push("/");
     } catch {
       alert("退会処理に失敗しました。しばらくしてから再試行してください。");
     } finally {
