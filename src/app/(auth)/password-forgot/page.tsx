@@ -19,7 +19,7 @@ const PasswordForgotPage = () => {
     setIsSubmitting(true);
 
     try {
-      await apiClient("/api/v1/auth/password", "POST", { email })
+      await apiClient("/api/v1/auth/password", "POST", { email });
       alert("パスワードリセットメールが送信されました。");
     } catch (e) {
       console.error("パスワードリセットメール送信エラー", e);
