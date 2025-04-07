@@ -1,24 +1,46 @@
 "use client";
 
 import { useState } from "react";
+import { useApiClient } from "@/lib/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 const PasswordResetPage = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [isSubmitting, SetIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiClient = useApiClient();
 
-  // パスワードリセットのイベントハンドラー
+  // パスワードリセット処理
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
 
-    SetIsSubmitting(true);
+    setIsSubmitting(true);
 
-    setTimeout(() => {
-      SetIsSubmitting(false);
+    // NOTE: リセットメール内のリンク押下で遷移先ページURLに `reset_password_token` が自動付与される
+    // APIリクエストに含めるリセットトークンを取得
+    const params = new URLSearchParams(window.location.search);
+    const resetPasswordToken = params.get("reset_password_token");
+
+    if (!resetPasswordToken) {
+      alert("リセットトークンが見つかりません。");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      apiClient("/api/v1/auth/password", "PUT", {
+        password,
+        password_confirmation: passwordConfirmation,
+        reset_password_token: resetPasswordToken,
+      })
       alert("パスワードがリセットされました。");
-    }, 2000);
+    } catch (e) {
+      console.error("パスワードリセットエラー", e);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
