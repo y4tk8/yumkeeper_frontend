@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useApiClient } from "@/lib/useApiClient";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -8,17 +9,23 @@ import Button from "@/components/ui/Button";
 const PasswordForgotPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiClient = useApiClient();
 
-  // パスワードリセットメール送信のイベントハンドラー
+  // パスワードリセットメール送信処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      await apiClient("/api/v1/auth/password", "POST", { email })
+      alert("パスワードリセットメールが送信されました。");
+    } catch (e) {
+      console.error("パスワードリセットメール送信エラー", e);
+    } finally {
       setIsSubmitting(false);
-      alert("パスワードリセットメールを送信しました。");
-    }, 2000);
+    }
   };
 
   return (
