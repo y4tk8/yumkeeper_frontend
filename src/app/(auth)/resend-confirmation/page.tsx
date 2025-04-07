@@ -1,23 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useApiClient } from "@/lib/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 const ResendConfirmationPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiClient = useApiClient();
 
-  // アカウント認証メール再送のイベントハンドラー
+  // アカウント認証メール再送処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      await apiClient("/api/v1/auth/confirmation", "POST", { email });
+      alert("アカウント認証メールが再送されました。");
+    } catch (e) {
+      console.error("アカウント認証メール再送エラー", e);
+    } finally {
       setIsSubmitting(false);
-      alert("アカウント認証メールを再送しました。");
-    }, 2000);
+    }
   };
 
   return (
