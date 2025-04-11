@@ -3,5 +3,5 @@
 // 材料 or 調味料 の入力フォーム
 export interface ItemEntry {
   name: string;
-  quantity: string;
+  amount: string;
 }

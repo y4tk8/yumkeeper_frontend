@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useApiClient } from "@/lib/useApiClient";
+import { parseAmountToQuantityAndUnit } from "@/utils/parseAmount";
 import { ItemEntry } from "@/types/recipe";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
@@ -9,20 +12,23 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function RecipeNewPage() {
-  const [title, setTitle] = useState("");
-  const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", quantity: "" }]);
-  const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", quantity: "" }]);
-  const [memo, setMemo] = useState("");
+  const [name, setName] = useState("");
+  const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
+  const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
+  const [notes, setNotes] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const { request, userId } = useApiClient();
 
   // フォームの入力値を変更
   const handleChange = (
     index: number,
-    key: keyof ItemEntry, // `name` または `quantity`
+    key: keyof ItemEntry, // `name` または `amount`
     value: string,
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
   ) => {
-    const newItems = [...items]; // 配列内の { name: 〇〇, quantity: 〇〇 } として存在する要素を展開
+    const newItems = [...items]; // 配列内の { name: 〇〇, amount: 〇〇 } として存在する要素を展開
     newItems[index][key] = value; // 入力値を更新
     setter(newItems); // 状態（State）を更新
   };
@@ -32,7 +38,7 @@ export default function RecipeNewPage() {
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
   ) => {
-    setter([...items, { name: "", quantity: "" }]);
+    setter([...items, { name: "", amount: "" }]);
   };
 
   // 入力フォームの行を削除
@@ -44,8 +50,54 @@ export default function RecipeNewPage() {
     setter(items.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async () => {
-    // APIリクエスト
+  // 新しいレシピの登録処理
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting) return; // 二重送信防止
+
+    setIsSubmitting(true);
+
+    try {
+      if (!userId) {
+        alert("サインインが必要です");
+        return;
+      }
+
+      const mappedIngredients = ingredients.map((item) => {
+        const { quantity, unit } = parseAmountToQuantityAndUnit(item.amount);
+        return {
+          name: item.name,
+          quantity,
+          unit,
+          category: "ingredient",
+        };
+      });
+
+      const mappedSeasonings = seasonings.map((item) => {
+        const { quantity, unit } = parseAmountToQuantityAndUnit(item.amount);
+        return {
+          name: item.name,
+          quantity,
+          unit,
+          category: "seasoning",
+        };
+      });
+
+
+      const res = await request(`/api/v1/users/${userId}/recipes`, "POST", {
+        recipe: {
+          name,
+          ingredients_attributes: [...mappedIngredients, ...mappedSeasonings],
+          notes,
+        },
+      });
+
+      router.push("/recipes/index");
+    } catch (e) {
+      console.error("レシピ登録エラー", e);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -56,8 +108,8 @@ export default function RecipeNewPage() {
       <InputField
         type="text"
         placeholder="レシピ名"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
 
       {/* 材料 */}
@@ -99,8 +151,8 @@ export default function RecipeNewPage() {
       {/* 自由メモ */}
       <textarea
         placeholder="メモを入力できます"
-        value={memo}
-        onChange={(e) => setMemo(e.target.value)}
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
         className="w-full h-40 rounded-md border border-black px-4 py-2"
       />
 
