@@ -23,7 +23,7 @@ export default function SingInPage() {
     setIsSubmitting(true);
 
     try {
-      const { headers } = await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
+      const { data, headers } = await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
 
       // サインイン成功で Devise Token Auth の認証情報がレスポンスヘッダーに返る
       // 毎回のAPIリクエストで使えるよう Context に追加
@@ -32,6 +32,10 @@ export default function SingInPage() {
         client: headers.get("client") || "",
         uid: headers.get("uid") || "",
       });
+
+      // サインイン成功でユーザーIDを取得と Context に追加
+      const userId = (data as { data: { id: number } }).data.id;
+      authContext?.setUserId(userId);
 
       router.push("/");
     } catch (error) {
