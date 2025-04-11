@@ -10,15 +10,18 @@ interface AuthHeaders {
 
 type AuthContextType = {
   authHeaders: AuthHeaders | null;
+  userId: number | null;
   setAuthHeaders: (headers: AuthHeaders | null) => void;
+  setUserId: (id: number | null) => void;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authHeaders, setAuthHeadersState] = useState<AuthHeaders | null>(null);
+  const [userId, setUserIdState] = useState<number | null>(null);
 
-  // Context状態 と localStorage の両方に認証情報を保存する関数
+  // Context と localStorage に認証情報を保存する関数
   const setAuthHeaders = (headers: AuthHeaders | null) => {
     setAuthHeadersState(headers);
     if (headers) {
@@ -28,21 +31,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // 初回マウント時に localStorage から認証情報を復元
+  // Context と localStorage にユーザーIDを保存する関数
+  const setUserId = (id: number | null) => {
+    setUserIdState(id);
+    if (id !== null) {
+      localStorage.setItem("authUserId", String(id));
+    } else {
+      localStorage.removeItem("authUserId");
+    }
+  };
+
+  // 初回マウント時に localStorage から認証情報とユーザーIDを復元
   useEffect(() => {
-    const stored = localStorage.getItem("authHeaders");
-    if (stored) {
+    const storedHeaders = localStorage.getItem("authHeaders");
+    const storedUserId = localStorage.getItem("authUserId");
+
+    if (storedHeaders) {
       try {
-        const parsed = JSON.parse(stored) as AuthHeaders;
-        setAuthHeadersState(parsed);
+        setAuthHeadersState(JSON.parse(storedHeaders));
       } catch (e) {
         console.error("認証情報の読み込みに失敗しました", e);
+      }
+    }
+
+    if (storedUserId) {
+      const id = Number(storedUserId);
+      if (!isNaN(id)) {
+        setUserIdState(id);
       }
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authHeaders, setAuthHeaders }}>
+    <AuthContext.Provider value={{ authHeaders, setAuthHeaders, userId, setUserId }}>
       {children}
     </AuthContext.Provider>
   );
