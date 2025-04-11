@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApiClient } from "@/lib/useApiClient";
-import { parseAmountToQuantityAndUnit } from "@/utils/parseAmount";
+import { mapItems } from "@/utils/mapItems";
 import { ItemEntry } from "@/types/recipe";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
@@ -63,31 +63,14 @@ export default function RecipeNewPage() {
         return;
       }
 
-      const mappedIngredients = ingredients.map((item) => {
-        const { quantity, unit } = parseAmountToQuantityAndUnit(item.amount);
-        return {
-          name: item.name,
-          quantity,
-          unit,
-          category: "ingredient",
-        };
-      });
-
-      const mappedSeasonings = seasonings.map((item) => {
-        const { quantity, unit } = parseAmountToQuantityAndUnit(item.amount);
-        return {
-          name: item.name,
-          quantity,
-          unit,
-          category: "seasoning",
-        };
-      });
-
+      // 材料と調味料の全ての入力値を map で処理
+      const ingredientsData = mapItems(ingredients, "ingredient");
+      const seasoningsData = mapItems(seasonings, "seasoning");
 
       const res = await request(`/api/v1/users/${userId}/recipes`, "POST", {
         recipe: {
           name,
-          ingredients_attributes: [...mappedIngredients, ...mappedSeasonings],
+          ingredients_attributes: [...ingredientsData, ...seasoningsData],
           notes,
         },
       });
