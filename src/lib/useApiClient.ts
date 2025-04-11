@@ -17,13 +17,15 @@ export function useApiClient() {
     throw new Error("useApiClient must be used within an AuthProvider.");
   }
 
-  const { authHeaders } = context;
+  const { authHeaders, userId } = context;
 
-  return (
+  const request = (
     path: string,
     method: RequestMethod,
     body?: RequestBody,
   ) => {
     return apiRequest(path, method, body, authHeaders ?? undefined);
   };
+
+  return { request, userId };
 }
