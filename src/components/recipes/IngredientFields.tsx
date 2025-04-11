@@ -36,8 +36,8 @@ export default function IngredientFields({
       <input
         type="text"
         placeholder="分量"
-        value={item.quantity}
-        onChange={(e) => onChange("quantity", e.target.value)}
+        value={item.amount}
+        onChange={(e) => onChange("amount", e.target.value)}
         className="flex-[3] border p-2 rounded"
       />
       {isLast && (
