@@ -7,7 +7,7 @@ import { mapItems } from "@/utils/mapItems";
 import { ItemEntry } from "@/types/recipe";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
-// import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
+import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
@@ -140,7 +140,7 @@ export default function RecipeNewPage() {
       />
 
       {/* YouTube 埋め込み */}
-      {/* <VideoEmbedBlock /> */}
+      <VideoEmbedBlock />
 
       {/* 追加ボタン */}
       <div className="text-center pt-4">
