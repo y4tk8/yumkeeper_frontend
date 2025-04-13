@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useApiClient } from "@/lib/useApiClient";
 import { mapItems } from "@/utils/mapItems";
 import { ItemEntry } from "@/types/recipe";
+import { YouTubeVideoInfo } from "@/types/video";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
@@ -16,6 +17,7 @@ export default function RecipeNewPage() {
   const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
   const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
   const [notes, setNotes] = useState("");
+  const [videoInfo, setVideoInfo] = useState<YouTubeVideoInfo | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { request, userId } = useApiClient();
@@ -63,19 +65,28 @@ export default function RecipeNewPage() {
         return;
       }
 
-      // 材料と調味料の全ての入力値を map で処理
       const ingredientsData = mapItems(ingredients, "ingredient");
       const seasoningsData = mapItems(seasonings, "seasoning");
 
+      const videoAttributes = videoInfo ? {
+        video_id: videoInfo.video_id,
+        etag: videoInfo.etag,
+        thumbnail_url: videoInfo.thumbnail_url,
+        status: videoInfo.status,
+        is_embeddable: videoInfo.is_embeddable,
+        is_deleted: false,
+        cached_at: videoInfo.cached_at,
+      } : undefined;
+
       const res = await request(`/api/v1/users/${userId}/recipes`, "POST", {
         recipe: {
-          name,
+          name, notes,
           ingredients_attributes: [...ingredientsData, ...seasoningsData],
-          notes,
+          video_attributes: videoAttributes,
         },
       });
 
-      router.push("/recipes/index");
+      // router.push("/recipes/index");
     } catch (e) {
       console.error("レシピ登録エラー", e);
     } finally {
@@ -140,7 +151,10 @@ export default function RecipeNewPage() {
       />
 
       {/* YouTube 埋め込み */}
-      <VideoEmbedBlock />
+      <VideoEmbedBlock
+        videoInfo={videoInfo}
+        setVideoInfo={setVideoInfo}
+      />
 
       {/* 追加ボタン */}
       <div className="text-center pt-4">
