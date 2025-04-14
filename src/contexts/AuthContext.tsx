@@ -8,12 +8,12 @@ interface AuthHeaders {
   uid: string;
 }
 
-type AuthContextType = {
+interface AuthContextType {
   authHeaders: AuthHeaders | null;
   userId: number | null;
   setAuthHeaders: (headers: AuthHeaders | null) => void;
   setUserId: (id: number | null) => void;
-};
+}
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
