@@ -32,7 +32,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps)
     return {
       video_id: videoId,
       etag: item.etag,
-      thumbnail_url: item.snippet.thumbnails?.medium?.url ?? "",
+      thumbnail_url: item.snippet.thumbnails?.medium?.url ?? "/images/default-thumbnail.jpeg",
       status: item.status.privacyStatus,
       is_embeddable: item.status.embeddable,
       is_deleted: false,
