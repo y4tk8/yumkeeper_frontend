@@ -6,12 +6,21 @@ export function parseAmountToQuantityAndUnit(amount: string): {
 } {
   if (!amount) return { quantity: null, unit: "" };
 
+  // 全角の数字、ピリオド、スラッシュを半角に変換
+  const normalizedAmount = amount.replace(/[０-９．／]/g, (char) => {
+    const fullToHalf: Record<string, string> = {
+      "０": "0", "１": "1", "２": "2", "３": "3", "４": "4",
+      "５": "5", "６": "6", "７": "7", "８": "8", "９": "9",
+      "．": ".", "／": "/",
+    };
+    return fullToHalf[char] || char;
+  });
+
   // ([\d./]+)? -> 数字・ピリオド・スラッシュからなる `量`（1/2, 1.5など）をキャプチャ
   // \s*(.*) -> 空白以外の残り全部を `単位` としてキャプチャ
-  const match = amount.trim().match(/^([\d./]+)?\s*(.*)$/);
+  const match = normalizedAmount.trim().match(/^([\d./]+)?\s*(.*)$/);
 
-  // 分量フォームの値が正規表現に合致しないなら、unit の値として返す
-  if (!match) return { quantity: null, unit: amount };
+  if (!match) return { quantity: null, unit: normalizedAmount };
 
   let quantity: number | null = null;
   const rawQuantity = match[1]; // 量 を抽出
