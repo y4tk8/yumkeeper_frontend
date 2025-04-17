@@ -2,7 +2,7 @@ import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "destructive";
 }
 
 export default function Button({
@@ -20,6 +20,8 @@ export default function Button({
         return "bg-black text-white hover:bg-gray-800";
       case "outline":
         return "border border-gray-400 text-gray-700 hover:bg-gray-100";
+      case "destructive":
+        return "bg-red-600 text-white hover:bg-red-700";
       default:
         return "";
     }
