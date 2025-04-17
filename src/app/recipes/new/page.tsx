@@ -96,7 +96,7 @@ export default function RecipeNewPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
-      <h1 className="text-2xl font-bold">新しいレシピを追加</h1>
+      <h1 className="text-2xl font-bold">レシピを追加</h1>
 
       {/* レシピ名 */}
       <InputField
