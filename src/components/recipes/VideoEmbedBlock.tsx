@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { YouTubeVideoInfo } from "@/types/video";
 import { MinusCircle } from "lucide-react";
@@ -32,7 +32,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps)
     return {
       video_id: videoId,
       etag: item.etag,
-      thumbnail_url: item.snippet.thumbnails?.medium?.url ?? "/images/default-thumbnail.jpeg",
+      thumbnail_url: item.snippet.thumbnails?.medium?.url ?? "",
       status: item.status.privacyStatus,
       is_embeddable: item.status.embeddable,
       is_deleted: false,
