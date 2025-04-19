@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useApiClient } from "@/lib/useApiClient";
+import { useApiClient } from "@/lib/api/useApiClient";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDown, Check } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/Dialog";
+import { Pagination } from "@/components/ui/Pagination";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "@/components/ui/Button";
+import Button from "@/components/ui/ButtonLegacy";
 
 interface Recipe {
   id: number;
@@ -28,6 +29,8 @@ export default function RecipeIndexPage() {
   const [selectedSort, setSelectedSort] = useState("updated_desc");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pagination, setPagination] = useState({ page: 1, limit: 20, count: 0, totalPages: 1 });
+  const [currentPage, setCurrentPage] = useState(1);
   const { request, userId } = useApiClient();
 
   useEffect(() => {
@@ -36,9 +39,21 @@ export default function RecipeIndexPage() {
     // レシピ一覧の取得処理
     const fetchRecipes = async () => {
       try {
-        const query = new URLSearchParams({ sort: selectedSort }).toString();
+        const query = new URLSearchParams({
+          sort: selectedSort,
+          page: String(currentPage),
+        }).toString();
 
         const res = await request(`/api/v1/users/${userId}/recipes?${query}`, "GET");
+
+        // ページネーション情報を取得
+        const headers = res.headers;
+        setPagination({
+          page: Number(headers.get("Current-Page")),
+          limit: Number(headers.get("Page-Items")),
+          count: Number(headers.get("Total-Count")),
+          totalPages: Number(headers.get("Total-Pages")),
+        });
 
         setRecipes(res.data.recipes as Recipe[]); // NOTE: 期限優先でひとまず as Recipe[] で対応。ジェネリクスが本来はベスト。
       } catch (e) {
@@ -47,14 +62,14 @@ export default function RecipeIndexPage() {
     };
 
     fetchRecipes();
-  }, [selectedSort, userId, request]);
+  }, [userId, currentPage, selectedSort]);
 
   // レシピの削除処理
   const deleteRecipe = async () => {
     if (!deleteId || !userId ) return;
 
     try {
-      const res = await request(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");
+      await request(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");
 
       setRecipes((prev) => prev.filter((r) => r.id !== deleteId)); // UIを即時更新
     } catch (e) {
@@ -79,13 +94,11 @@ export default function RecipeIndexPage() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">レシピ一覧</h1>
 
+        {/* 並び替え */}
         <Menu as="div" className="relative inline-block text-left">
-          <div>
-            <MenuButton className="flex items-center px-3 py-1 border rounded-md shadow-sm transition hover:bg-gray-100">
-              並び替え <ChevronDown className="ml-1 w-4 h-4" />
-            </MenuButton>
-          </div>
-
+          <MenuButton className="flex items-center px-3 py-1 border rounded-md shadow-sm transition hover:bg-gray-100">
+            並び替え <ChevronDown className="ml-1 w-4 h-4" />
+          </MenuButton>
           <MenuItems className={`absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200
                                 divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10 focus:outline-none`}>
             <div className="py-1">
@@ -108,6 +121,7 @@ export default function RecipeIndexPage() {
         </Menu>
       </div>
 
+      {/* レシピ一覧 */}
       <div className="space-y-6">
         {recipes.map((recipe) => (
           <div
@@ -142,14 +156,25 @@ export default function RecipeIndexPage() {
         ))}
       </div>
 
-      {/* モーダル */}
+      {/* ページネーション */}
+      <div className="mt-8 flex justify-center">
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
+      {/* 削除モーダル */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>レシピを削除しますか？</DialogTitle>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={closeDeleteModal}>キャンセル</Button>
+            <Button variant="outline" onClick={closeDeleteModal}>
+              キャンセル
+            </Button>
             <Button variant="destructive" onClick={deleteRecipe}>
               削除
             </Button>
