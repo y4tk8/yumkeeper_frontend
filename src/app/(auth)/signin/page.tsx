@@ -2,7 +2,7 @@
 
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { apiRequest } from "@/lib/apiClient";
+import { apiRequest } from "@/lib/api/apiClient";
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
