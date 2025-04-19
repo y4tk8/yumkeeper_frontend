@@ -95,72 +95,79 @@ export default function RecipeNewPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
-      <h1 className="text-2xl font-bold">レシピを追加</h1>
-
-      {/* レシピ名 */}
-      <InputField
-        type="text"
-        placeholder="レシピ名"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+    <div className="max-w-3xl mx-auto space-y-8 py-12 px-4">
+      <h1 className="text-2xl font-bold mb-12">レシピを追加</h1>
+      <div className="max-w-2xl mx-auto">
+        {/* レシピ名 */}
+        <InputField
+          type="text"
+          placeholder="レシピ名"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
 
       {/* 材料 */}
-      <div>
-        <p className="font-semibold mb-2">材料</p>
-        {ingredients.map((item, index) => (
-          <IngredientFields
-            key={index}
-            item={item}
-            onChange={(key: keyof ItemEntry, value) =>
-              handleChange(index, key, value, setIngredients, ingredients)
-            }
-            onAdd={() => handleAdd(setIngredients, ingredients)}
-            onRemove={() => handleRemove(index, setIngredients, ingredients)}
-            isFirst={index === 0}
-            isLast={index === ingredients.length - 1}
-          />
-        ))}
-      </div>
+      <section>
+        <h2 className="text-lg font-semibold mb-4">材料</h2>
+        <div className="max-w-2xl mx-auto space-y-4">
+          {ingredients.map((item, index) => (
+            <IngredientFields
+              key={index}
+              index={index}
+              total={ingredients.length}
+              item={item}
+              onChange={(key: keyof ItemEntry, value) =>
+                handleChange(index, key, value, setIngredients, ingredients)
+              }
+              onAdd={() => handleAdd(setIngredients, ingredients)}
+              onRemove={() => handleRemove(index, setIngredients, ingredients)}
+            />
+          ))}
+        </div>
+      </section>
 
       {/* 調味料 */}
-      <div>
-        <p className="font-semibold mb-2">調味料</p>
-        {seasonings.map((item, index) => (
-          <SeasoningFields
-            key={index}
-            item={item}
-            onChange={(key: keyof ItemEntry, value) =>
-              handleChange(index, key, value, setSeasonings, seasonings)
-            }
-            onAdd={() => handleAdd(setSeasonings, seasonings)}
-            onRemove={() => handleRemove(index, setSeasonings, seasonings)}
-            isFirst={index === 0}
-            isLast={index === seasonings.length - 1}
-          />
-        ))}
-      </div>
+      <section>
+        <h2 className="text-lg font-semibold mb-4">調味料</h2>
+        <div className="max-w-2xl mx-auto space-y-4">
+          {seasonings.map((item, index) => (
+            <SeasoningFields
+              key={index}
+              index={index}
+              total={seasonings.length}
+              item={item}
+              onChange={(key: keyof ItemEntry, value) =>
+                handleChange(index, key, value, setSeasonings, seasonings)
+              }
+              onAdd={() => handleAdd(setSeasonings, seasonings)}
+              onRemove={() => handleRemove(index, setSeasonings, seasonings)}
+            />
+          ))}
+        </div>
+      </section>
 
       {/* 自由メモ */}
-      <textarea
-        placeholder="メモを入力できます"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        className="w-full h-40 rounded-md border border-black px-4 py-2"
-      />
+      <div className="max-w-2xl mx-auto space-y-8">
+        <textarea
+          placeholder="メモを入力できます"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full mx-auto h-40 rounded-md border border-black px-4 py-2 my-8"
+        />
 
-      {/* YouTube 埋め込み */}
-      <VideoEmbedBlock
-        videoInfo={videoInfo}
-        setVideoInfo={setVideoInfo}
-      />
+        {/* YouTube 埋め込み */}
+        <VideoEmbedBlock
+          videoInfo={videoInfo}
+          setVideoInfo={setVideoInfo}
+        />
 
-      {/* 追加ボタン */}
-      <div className="text-center pt-4">
-        <Button fullWidth onClick={handleSubmit}>
-          レシピを追加する
-        </Button>
+        {/* 追加ボタン */}
+        <div className="text-center py-24">
+          <Button fullWidth onClick={handleSubmit}>
+            レシピを追加する
+          </Button>
+        </div>
       </div>
     </div>
   );
