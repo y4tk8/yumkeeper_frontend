@@ -77,7 +77,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps)
   };
 
   return (
-    <div className="w-full h-60 border border-black rounded-md flex flex-col justify-center items-center gap-4">
+    <div className="w-full h-64 border border-black rounded-md flex flex-col justify-center items-center gap-4">
       {videoInfo ? (
         <div className="relative w-full h-full">
           {/* 削除ボタン */}
