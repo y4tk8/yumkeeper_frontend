@@ -132,7 +132,7 @@ export default function RecipeIndexPage() {
             <Link href={`/recipes/${recipe.id}`}>
               <Image
                 src={recipe.thumbnail_url || "/images/default-thumbnail.jpeg"}
-                alt="thumbnail"
+                alt={`${recipe.name}の動画サムネイル`}
                 width={800}
                 height={480}
                 className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200"
