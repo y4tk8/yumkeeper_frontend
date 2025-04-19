@@ -8,7 +8,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "@/components/ui/ButtonLegacy";
+import Button from "@/components/ui/Button";
 
 interface Recipe {
   id: number;
