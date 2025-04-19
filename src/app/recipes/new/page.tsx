@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useApiClient } from "@/lib/useApiClient";
+import { useApiClient } from "@/lib/api/useApiClient";
 import { mapItems } from "@/utils/mapItems";
 import { ItemEntry } from "@/types/recipe";
 import { YouTubeVideoInfo } from "@/types/video";

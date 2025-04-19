@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useApiClient } from "@/lib/useApiClient";
+import { useApiClient } from "@/lib/api/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
@@ -9,7 +9,7 @@ const PasswordResetPage = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const apiClient = useApiClient();
+  const { request } = useApiClient();
 
   // パスワードリセット処理
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,7 +30,7 @@ const PasswordResetPage = () => {
     }
 
     try {
-      apiClient("/api/v1/auth/password", "PUT", {
+      const res = request("/api/v1/auth/password", "PUT", {
         password,
         password_confirmation: passwordConfirmation,
         reset_password_token: resetPasswordToken,

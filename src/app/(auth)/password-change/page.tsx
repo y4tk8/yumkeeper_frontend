@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useApiClient } from "@/lib/useApiClient";
+import { useApiClient } from "@/lib/api/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
@@ -10,7 +10,7 @@ const PasswordChangePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const apiClient = useApiClient();
+  const { request } = useApiClient();
 
   // 現在のパスワード変更処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,7 +20,7 @@ const PasswordChangePage = () => {
     setIsSubmitting(true);
 
     try {
-      await apiClient("/api/v1/auth/", "PUT", {
+      const res = await request("/api/v1/auth/", "PUT", {
         current_password: currentPassword,
         password: newPassword,
         password_confirmation: newPasswordConfirmation,

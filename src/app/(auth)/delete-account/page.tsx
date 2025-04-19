@@ -2,7 +2,7 @@
 
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { useApiClient } from "@/lib/useApiClient";
+import { useApiClient } from "@/lib/api/useApiClient";
 import { AuthContext } from "@/contexts/AuthContext";
 
 const DeleteAccountPage = () => {
@@ -11,7 +11,7 @@ const DeleteAccountPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const authContext = useContext(AuthContext);
   const router = useRouter();
-  const apiClient = useApiClient();
+  const { request } = useApiClient();
 
   // アカウント退会処理
   const handleDeleteAccount = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,7 +21,7 @@ const DeleteAccountPage = () => {
     setIsSubmitting(true);
 
     try {
-      await apiClient("/api/v1/auth", "DELETE");
+      await request("/api/v1/auth", "DELETE");
 
       authContext?.setAuthHeaders(null); // Context と ローカルストレージ の認証情報をクリア
 
@@ -67,7 +67,7 @@ const DeleteAccountPage = () => {
         </button>
       </div>
 
-      {/* モーダル */}
+      {/* 退会モーダル */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md shadow-md w-80 text-center">
