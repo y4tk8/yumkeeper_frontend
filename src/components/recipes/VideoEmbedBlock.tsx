@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { YouTubeVideoInfo } from "@/types/video";
+import { Video } from "@/types/video";
 import { MinusCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 interface VideoProps {
-  videoInfo: YouTubeVideoInfo | null;
-  setVideoInfo: React.Dispatch<React.SetStateAction<YouTubeVideoInfo | null>>;
+  videoInfo: Video | null;
+  setVideoInfo: React.Dispatch<React.SetStateAction<Video | null>>;
 }
 
 export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps) {
@@ -19,7 +19,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps)
   const handleCloseModal = () => setIsOpen(false);
 
   // YouTube Data API へリクエストを送る関数
-  const fetchVideoInfo = async (videoId: string): Promise<YouTubeVideoInfo | null> => {
+  const fetchVideoInfo = async (videoId: string): Promise<Video | null> => {
     const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
     const endpoint = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet,status`;
 

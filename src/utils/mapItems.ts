@@ -1,4 +1,4 @@
-import { parseAmountToQuantityAndUnit } from "./parseAmount";
+import { parseAmountToQuantityAndUnit } from "@/utils/parseAmount";
 import { ItemEntry } from "@/types/recipe";
 
 // 材料 or 調味料 の入力値を map で処理

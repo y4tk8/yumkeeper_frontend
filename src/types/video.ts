@@ -1,5 +1,5 @@
 // YouTube Data API から取得した動画情報
-export interface YouTubeVideoInfo {
+export interface Video {
   video_id: string;
   etag: string;
   thumbnail_url: string;

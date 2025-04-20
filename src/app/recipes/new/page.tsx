@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useApiClient } from "@/lib/api/useApiClient";
 import { mapItems } from "@/utils/mapItems";
 import { ItemEntry } from "@/types/recipe";
-import { YouTubeVideoInfo } from "@/types/video";
+import { Video } from "@/types/video";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
@@ -17,7 +17,7 @@ export default function RecipeNewPage() {
   const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
   const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
   const [notes, setNotes] = useState("");
-  const [videoInfo, setVideoInfo] = useState<YouTubeVideoInfo | null>(null);
+  const [videoInfo, setVideoInfo] = useState<Video | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { request, userId } = useApiClient();
@@ -148,14 +148,19 @@ export default function RecipeNewPage() {
       </section>
 
       {/* 自由メモ */}
-      <div className="max-w-2xl mx-auto space-y-8">
-        <textarea
-          placeholder="メモを入力できます"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          className="w-full mx-auto h-40 rounded-md border border-black px-4 py-2 my-8"
-        />
+      <section>
+      <h2 className="text-lg font-semibold -mb-4">自由メモ</h2>
+        <div className="max-w-2xl mx-auto space-y-8">
+          <textarea
+            placeholder="メモを入力できます"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="w-full mx-auto h-40 rounded-md border border-black px-4 py-2 my-8"
+          />
+        </div>
+      </section>
 
+      <div className="max-w-2xl mx-auto space-y-8">
         {/* YouTube 埋め込み */}
         <VideoEmbedBlock
           videoInfo={videoInfo}
