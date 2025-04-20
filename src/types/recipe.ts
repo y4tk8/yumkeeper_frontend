@@ -1,3 +1,17 @@
+import { Ingredient } from "@/types/ingredient";
+import { Video } from "@/types/video";
+
+export interface Recipe {
+  id: number;
+  user_id: number;
+  name: string;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+  ingredients?: Ingredient[];
+  video?: Video;
+}
+
 // レシピ登録時の 材料 or 調味料 の入力フォーム
 export interface ItemEntry {
   name: string;
