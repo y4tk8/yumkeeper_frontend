@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useApiClient } from "@/lib/api/useApiClient";
+import { RecipeCard } from "@/types/recipe";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDown, Check } from "lucide-react";
 import { Pagination } from "@/components/ui/Pagination";
@@ -10,14 +11,6 @@ import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 
-interface Recipe {
-  id: number;
-  name: string;
-  created_at: string;
-  updated_at: string;
-  thumbnail_url: string;
-}
-
 const SORT_OPTIONS = [
   { label: "最新の更新順", value: "updated_desc" },
   { label: "追加日（新しい順）", value: "created_desc" },
@@ -25,19 +18,20 @@ const SORT_OPTIONS = [
 ];
 
 export default function RecipeIndexPage() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipes, setRecipes] = useState<RecipeCard[]>([]);
   const [selectedSort, setSelectedSort] = useState("updated_desc");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pagination, setPagination] = useState({ page: 1, limit: 20, count: 0, totalPages: 1 });
   const [currentPage, setCurrentPage] = useState(1);
+
   const { request, userId } = useApiClient();
 
+  // レシピ一覧の取得処理
   useEffect(() => {
-    if (!userId) return;
-
-    // レシピ一覧の取得処理
     const fetchRecipes = async () => {
+      if (!userId) return;
+
       try {
         const query = new URLSearchParams({
           sort: selectedSort,
@@ -55,9 +49,9 @@ export default function RecipeIndexPage() {
           totalPages: Number(headers.get("Total-Pages")),
         });
 
-        setRecipes(res.data.recipes as Recipe[]); // NOTE: 期限優先でひとまず as Recipe[] で対応。ジェネリクスが本来はベスト。
+        setRecipes(res.data.recipes as RecipeCard[]); // NOTE: 期限優先でひとまず as RecipeCard[] で対応。ジェネリクスが本来はベスト。
       } catch (e) {
-        console.error("レシピ取得エラー", e);
+        console.error("レシピ一覧取得エラー", e);
       }
     };
 

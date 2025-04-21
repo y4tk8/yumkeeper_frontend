@@ -15,11 +15,11 @@ export default function RecipeShowPage() {
   const { request, userId } = useApiClient();
   const { recipeId } = useParams();
 
+  // レシピ詳細の取得処理
   useEffect(() => {
-    if (!userId || !recipeId) return;
-
-    // レシピ詳細の取得処理
     const fetchRecipe = async () => {
+      if (!userId || !recipeId) return;
+
       try {
         const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
 
@@ -39,7 +39,6 @@ export default function RecipeShowPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 py-12 px-4">
-
       {/* レシピ名 */}
       <section>
         <h2 className="text-lg font-semibold mb-4">レシピ名</h2>

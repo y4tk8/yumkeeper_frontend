@@ -12,7 +12,15 @@ export interface Recipe {
   video?: Video;
 }
 
-// レシピ登録時の 材料 or 調味料 の入力フォーム
+export interface RecipeCard {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  thumbnail_url: string;
+}
+
+// 材料 & 調味料 の入力フォーム
 export interface ItemEntry {
   name: string;
   amount: string;
