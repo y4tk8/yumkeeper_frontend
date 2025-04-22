@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { mapItems } from "@/utils/mapItems";
 import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video } from "@/types/video";
+import { v4 as uuidv4 } from "uuid";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
@@ -14,8 +15,8 @@ import Button from "@/components/ui/Button";
 
 export default function RecipeNewPage() {
   const [name, setName] = useState("");
-  const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
-  const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
+  const [ingredients, setIngredients] = useState<ItemEntry[]>([{ id: uuidv4(), name: "", amount: "" }]);
+  const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ id: uuidv4(), name: "", amount: "" }]);
   const [notes, setNotes] = useState("");
   const [videoInfo, setVideoInfo] = useState<Video | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +42,7 @@ export default function RecipeNewPage() {
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
   ) => {
-    setter([...items, { name: "", amount: "" }]);
+    setter([...items, { id: uuidv4(), name: "", amount: "" }]);
   };
 
   // 入力フォームの行を削除
@@ -109,7 +110,7 @@ export default function RecipeNewPage() {
         <div className="max-w-2xl mx-auto space-y-4">
           {ingredients.map((item, index) => (
             <IngredientFields
-              key={index}
+              key={item.id}
               index={index}
               total={ingredients.length}
               item={item}
@@ -129,7 +130,7 @@ export default function RecipeNewPage() {
         <div className="max-w-2xl mx-auto space-y-4">
           {seasonings.map((item, index) => (
             <SeasoningFields
-              key={index}
+              key={item.id}
               index={index}
               total={seasonings.length}
               item={item}
