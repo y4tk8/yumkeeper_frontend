@@ -24,7 +24,12 @@ export const mapIngredientsToEntries = (ingredients: Ingredient[], category: "in
   return ingredients
     .filter((item) => item.category === category)
     .map((item) => ({
+      id: item.id,
       name: item.name,
-      amount: item.quantity !== null ? `${item.quantity}${item.unit}` : "",
+      amount: item.quantity !== null && item.unit !== null
+        ? `${item.quantity}${item.unit}`
+        : item.quantity !== null
+        ? `${item.quantity}`
+        : item.unit || "",
     }));
 };
