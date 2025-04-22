@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useApiClient } from "@/lib/api/useApiClient";
+import { useRouter } from "next/navigation";
 import { mapItems } from "@/utils/mapItems";
-import { ItemEntry } from "@/types/recipe";
+import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video } from "@/types/video";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
@@ -26,7 +26,7 @@ export default function RecipeNewPage() {
   // フォームの入力値を変更
   const handleChange = (
     index: number,
-    key: keyof ItemEntry, // `name` または `amount`
+    key: keyof ItemEntryWithoutId,
     value: string,
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
@@ -53,7 +53,7 @@ export default function RecipeNewPage() {
     setter(items.filter((_, i) => i !== index));
   };
 
-  // 新しいレシピの追加処理
+  // レシピの追加処理
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return; // 二重送信防止
