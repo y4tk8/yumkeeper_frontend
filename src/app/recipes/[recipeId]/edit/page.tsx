@@ -94,8 +94,8 @@ export default function RecipeEditPage() {
     setIsSubmitting(true);
 
     try {
-      const ingredientsData = mapItems(ingredients, "ingredient");
-      const seasoningsData = mapItems(seasonings, "seasoning");
+      const ingredientsData = mapItems(ingredients, "ingredient", true);
+      const seasoningsData = mapItems(seasonings, "seasoning", true);
 
       const videoAttributes = videoInfo ? {
         video_id: videoInfo.video_id,
