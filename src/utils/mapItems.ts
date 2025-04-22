@@ -8,13 +8,14 @@ export const mapItems = (items: ItemEntry[], category: "ingredient" | "seasoning
     .filter((item) => item.name.trim() !== "" || item.amount.trim() !== "") // name と amount どちらも空の行は除外
     .map((item) => {
       const { quantity, unit } = parseAmountToQuantityAndUnit(item.amount);
-      return {
+      const base = {
         name: item.name,
         quantity,
         unit,
         category,
-        id: 0, // 新規のレシピ登録ではid不要のため 0 で対応
       };
+
+      return item.id ? { ...base, id: item.id } : base;
     });
 };
 
