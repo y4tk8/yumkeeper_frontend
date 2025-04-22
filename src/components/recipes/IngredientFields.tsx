@@ -1,11 +1,11 @@
+import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { MinusCircle, PlusCircle } from "lucide-react";
-import { ItemEntry } from "@/types/recipe";
 
 interface IngredientFieldProps {
   index: number;
   total: number;
   item: ItemEntry;
-  onChange?: (key: keyof ItemEntry, value: string) => void;
+  onChange?: (key: keyof ItemEntryWithoutId, value: string) => void;
   onAdd?: () => void;
   onRemove?: () => void;
   readOnly?: boolean;
