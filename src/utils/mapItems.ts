@@ -3,7 +3,11 @@ import { ItemEntry } from "@/types/recipe";
 import { Ingredient } from "@/types/ingredient";
 
 // 材料・調味料の入力値 -> API送信用へ map で整形
-export const mapItems = (items: ItemEntry[], category: "ingredient" | "seasoning"): Ingredient[] => {
+export const mapItems = (
+  items: ItemEntry[],
+  category: "ingredient" | "seasoning",
+  includeId = false,
+): Ingredient[] => {
   return items
     .filter((item) => item.name.trim() !== "" || item.amount.trim() !== "") // name と amount どちらも空の行は除外
     .map((item) => {
@@ -15,7 +19,7 @@ export const mapItems = (items: ItemEntry[], category: "ingredient" | "seasoning
         category,
       };
 
-      return item.id ? { ...base, id: item.id } : base;
+      return includeId && item.id ? { ...base, id: item.id } : base; // 新規登録ではID不要。更新ではカラム識別のためID付与。
     });
 };
 
