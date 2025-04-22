@@ -22,7 +22,7 @@ export interface RecipeCard {
 
 // 材料・調味料の `名前` & `分量` の入力フォーム
 export interface ItemEntry {
-  id?: number;
+  id?: number | string;
   name: string;
   amount: string;
 }

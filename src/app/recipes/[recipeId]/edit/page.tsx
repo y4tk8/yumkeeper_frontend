@@ -3,11 +3,10 @@
 import { useState, useEffect } from "react";
 import { useApiClient } from "@/lib/api/useApiClient";
 import { useParams, useRouter } from "next/navigation";
-import { mapItems } from "@/utils/mapItems";
-import { mapIngredientsToEntries } from "@/utils/mapItems";
-import { Recipe } from "@/types/recipe";
-import { ItemEntry } from "@/types/recipe";
+import { mapItems, mapIngredientsToEntries } from "@/utils/mapItems";
+import { Recipe, ItemEntry } from "@/types/recipe";
 import { Video } from "@/types/video";
+import { v4 as uuidv4 } from "uuid";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
@@ -16,8 +15,8 @@ import Button from "@/components/ui/Button";
 
 export default function RecipeEditPage() {
   const [name, setName] = useState("");
-  const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
-  const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
+  const [ingredients, setIngredients] = useState<ItemEntry[]>([{ id: uuidv4(), name: "", amount: "" }]);
+  const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ id: uuidv4(), name: "", amount: "" }]);
   const [notes, setNotes] = useState("");
   const [videoInfo, setVideoInfo] = useState<Video | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,11 +39,11 @@ export default function RecipeEditPage() {
 
         // 取得した材料データを表示用に整形
         const ing = recipe.ingredients ? mapIngredientsToEntries(recipe.ingredients, "ingredient") : [];
-        setIngredients(ing.length > 0 ? ing : [{ name: "", amount: "" }]);
+        setIngredients(ing.length > 0 ? ing : [{ id: uuidv4(), name: "", amount: "" }]);
 
         // 取得した調味料データを表示用に整形
         const seas = recipe.ingredients ? mapIngredientsToEntries(recipe.ingredients, "seasoning") : [];
-        setIngredients(seas.length > 0 ? seas : [{ name: "", amount: "" }]);
+        setSeasonings(seas.length > 0 ? seas : [{ id: uuidv4(), name: "", amount: "" }]);
 
         if (recipe.video) {
           setVideoInfo(recipe.video);
@@ -60,7 +59,7 @@ export default function RecipeEditPage() {
   // フォームの入力値を変更
   const handleChange = (
     index: number,
-    key: keyof ItemEntry, // `name` または `amount`
+    key: keyof ItemEntry,
     value: string,
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
@@ -75,7 +74,7 @@ export default function RecipeEditPage() {
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
   ) => {
-    setter([...items, { name: "", amount: "" }]);
+    setter([...items, { id: uuidv4(), name: "", amount: "" }]);
   };
 
   // 入力フォームの行を削除
@@ -143,7 +142,7 @@ export default function RecipeEditPage() {
         <div className="max-w-2xl mx-auto space-y-4">
           {ingredients.map((item, index) => (
             <IngredientFields
-              key={index}
+              key={item.id}
               index={index}
               total={ingredients.length}
               item={item}
@@ -163,7 +162,7 @@ export default function RecipeEditPage() {
         <div className="max-w-2xl mx-auto space-y-4">
           {seasonings.map((item, index) => (
             <SeasoningFields
-              key={index}
+              key={item.id}
               index={index}
               total={seasonings.length}
               item={item}
