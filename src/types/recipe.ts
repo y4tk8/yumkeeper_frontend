@@ -20,8 +20,11 @@ export interface RecipeCard {
   thumbnail_url: string;
 }
 
-// 材料 & 調味料 の入力フォーム
+// 材料・調味料の `名前` & `分量` の入力フォーム
 export interface ItemEntry {
+  id?: number;
   name: string;
   amount: string;
 }
+
+export type ItemEntryWithoutId = Omit<ItemEntry, "id">;
