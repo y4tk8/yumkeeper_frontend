@@ -19,12 +19,12 @@ export function useApiClient() {
 
   const { authHeaders, userId } = context;
 
-  const request = (
+  const request = <T = Record<string, unknown>>(
     path: string,
     method: RequestMethod,
     body?: RequestBody,
   ) => {
-    return apiRequest(path, method, body, authHeaders ?? undefined);
+    return apiRequest<T>(path, method, body, authHeaders ?? undefined);
   };
 
   return { request, userId };
