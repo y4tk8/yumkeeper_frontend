@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { mapItems } from "@/utils/mapItems";
 import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video } from "@/types/video";
+import { RecipeResponse } from "@/types/api";
+import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
@@ -63,28 +65,31 @@ export default function RecipeNewPage() {
     try {
       const ingredientsData = mapItems(ingredients, "ingredient");
       const seasoningsData = mapItems(seasonings, "seasoning");
+      const videoAttributes = videoInfo ? { ...videoInfo } : undefined;
 
-      const videoAttributes = videoInfo ? {
-        video_id: videoInfo.video_id,
-        etag: videoInfo.etag,
-        thumbnail_url: videoInfo.thumbnail_url,
-        status: videoInfo.status,
-        is_embeddable: videoInfo.is_embeddable,
-        is_deleted: false,
-        cached_at: videoInfo.cached_at,
-      } : undefined;
-
-      const res = await request(`/api/v1/users/${userId}/recipes`, "POST", {
+      const payload = {
         recipe: {
           name, notes,
           ingredients_attributes: [...ingredientsData, ...seasoningsData],
           video_attributes: videoAttributes,
         },
-      });
+      };
 
-      router.push("/recipes/index");
+      const res = await request<RecipeResponse>(`/api/v1/users/${userId}/recipes`, "POST", payload);
+
+      if (res.ok) {
+        showSuccessToast(res.data.message || "レシピが追加されました");
+
+        router.push("/recipes/index");
+      } else {
+        showErrorToast(res.data.error || "レシピの追加に失敗しました");
+      }
     } catch (e) {
-      console.error("レシピ追加エラー", e);
+      showErrorToast("通信エラーが発生しました");
+
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e)
+      }
     } finally {
       setIsSubmitting(false);
     }
