@@ -5,6 +5,7 @@ import { useApiClient } from "@/lib/api/useApiClient";
 import { useParams } from "next/navigation";
 import { formatAmount } from "@/utils/formatAmount";
 import { Recipe } from "@/types/recipe";
+import { showErrorToast } from "@/components/ui/shadcn/sonner";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoDisplay from "@/components/recipes/VideoDisplay";
@@ -25,7 +26,11 @@ export default function RecipeShowPage() {
 
         setRecipe(res.data.recipe as Recipe); // NOTE: 期限優先でひとまず as Recipe で対応。ジェネリクスが本来はベスト。
       } catch (e) {
-        console.error("レシピ取得エラー", e);
+        showErrorToast("通信エラーが発生しました");
+
+        if (process.env.NODE_ENV !== "production") {
+          console.error("APIエラー:", e)
+        }
       }
     };
 

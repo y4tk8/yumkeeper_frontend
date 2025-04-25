@@ -6,6 +6,8 @@ import { useParams, useRouter } from "next/navigation";
 import { mapItems, mapIngredientsToEntries } from "@/utils/mapItems";
 import { Recipe, ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video, VideoWithoutId } from "@/types/video";
+import { RecipeResponse } from "@/types/api";
+import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner";
 import { v4 as uuidv4 } from "uuid";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
@@ -49,7 +51,11 @@ export default function RecipeEditPage() {
           setVideoInfo(recipe.video);
         }
       } catch (e) {
-        console.error("レシピ取得エラー", e);
+        showErrorToast("通信エラーが発生しました");
+
+        if (process.env.NODE_ENV !== "production") {
+          console.error("APIエラー:", e)
+        }
       }
     };
 
@@ -123,11 +129,21 @@ export default function RecipeEditPage() {
         },
       };
 
-      const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "PATCH", payload);
+      const res = await request<RecipeResponse>(`/api/v1/users/${userId}/recipes/${recipeId}`, "PATCH", payload);
 
-      router.push(`/recipes/${recipeId}`);
+      if (res.ok) {
+        showSuccessToast(res.data.message || "レシピが更新されました");
+
+        router.push(`/recipes/${recipeId}`);
+      } else {
+        showErrorToast(res.data.error || "レシピの更新に失敗しました");
+      }
     } catch (e) {
-      console.error("レシピ更新エラー", e);
+      showErrorToast("通信エラーが発生しました");
+
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e)
+      }
     } finally {
       setIsSubmitting(false);
     }

@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import { useApiClient } from "@/lib/api/useApiClient";
 import { RecipeCard } from "@/types/recipe";
+import { RecipeResponse } from "@/types/api";
+import { Pagination } from "@/components/ui/Pagination";
+import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDown, Check } from "lucide-react";
-import { Pagination } from "@/components/ui/Pagination";
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -51,7 +53,11 @@ export default function RecipeIndexPage() {
 
         setRecipes(res.data.recipes as RecipeCard[]); // NOTE: 期限優先でひとまず as RecipeCard[] で対応。ジェネリクスが本来はベスト。
       } catch (e) {
-        console.error("レシピ一覧取得エラー", e);
+        showErrorToast("通信エラーが発生しました");
+
+        if (process.env.NODE_ENV !== "production") {
+          console.error("APIエラー:", e)
+        }
       }
     };
 
@@ -63,11 +69,20 @@ export default function RecipeIndexPage() {
     if (!deleteId || !userId ) return;
 
     try {
-      await request(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");
+      const res = await request<RecipeResponse>(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");
 
-      setRecipes((prev) => prev.filter((r) => r.id !== deleteId)); // UIを即時更新
+      if (res.ok) {
+        setRecipes((prev) => prev.filter((r) => r.id !== deleteId)); // UIを即時更新
+        showSuccessToast(res.data.message || "レシピが削除されました");
+      } else {
+        showErrorToast(res.data.error || "レシピの削除に失敗しました");
+      }
     } catch (e) {
-      console.error("レシピ削除エラー", e);
+      showErrorToast("通信エラーが発生しました");
+
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e)
+      }
     } finally {
       closeDeleteModal();
     }
