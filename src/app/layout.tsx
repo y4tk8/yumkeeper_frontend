@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Toaster } from "@/components/ui/shadcn/sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
-import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
         </AuthProvider>
+
+        {/* フラッシュ */}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            classNames: {
+              toast: "max-w-3xl mx-auto w-full z-[9999]",
+            },
+          }}
+        />
       </body>
     </html>
   );
