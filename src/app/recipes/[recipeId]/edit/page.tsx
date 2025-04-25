@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useApiClient } from "@/lib/api/useApiClient";
 import { useParams, useRouter } from "next/navigation";
 import { mapItems, mapIngredientsToEntries } from "@/utils/mapItems";
-import { Recipe, ItemEntry } from "@/types/recipe";
-import { Video } from "@/types/video";
+import { Recipe, ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
+import { Video, VideoWithoutId } from "@/types/video";
 import { v4 as uuidv4 } from "uuid";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
@@ -56,20 +56,20 @@ export default function RecipeEditPage() {
     fetchRecipe();
   }, [userId, recipeId]);
 
-  // フォームの入力値を変更
+  // 材料・調味料の入力変更
   const handleChange = (
-    index: number,
-    key: keyof ItemEntry,
+    id: number | string,
+    key: keyof ItemEntryWithoutId,
     value: string,
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
   ) => {
-    const newItems = [...items]; // 配列内の { name: 〇〇, amount: 〇〇 } として存在する要素を展開
-    newItems[index][key] = value; // 入力値を更新
-    setter(newItems); // 状態（State）を更新
+    setter(items.map((item) =>
+      item.id === id ? { ...item, [key]: value } : item
+    ));
   };
 
-  // 入力フォームの行を追加
+  // 材料・調味料の入力行を追加
   const handleAdd = (
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
@@ -77,13 +77,26 @@ export default function RecipeEditPage() {
     setter([...items, { id: uuidv4(), name: "", amount: "" }]);
   };
 
-  // 入力フォームの行を削除
+  // 材料・調味料の入力行を削除
   const handleRemove = (
-    index: number,
+    id: number | string,
     setter: React.Dispatch<React.SetStateAction<ItemEntry[]>>,
     items: ItemEntry[],
   ) => {
-    setter(items.filter((_, i) => i !== index));
+    const newItems = [...items];
+    const targetIndex = newItems.findIndex((item) => item.id === id);
+
+    if (targetIndex === -1) return;
+
+    const target = newItems[targetIndex];
+
+    if (typeof target.id === "number") {
+      newItems[targetIndex] = { ...target, _destroy: true }  // idあり -> 該当レコードをDBから削除
+    } else {
+      newItems.splice(targetIndex, 1); // idなし -> UIから削除するだけ
+    }
+
+    setter(newItems);
   };
 
   // レシピの更新処理
@@ -94,32 +107,48 @@ export default function RecipeEditPage() {
     setIsSubmitting(true);
 
     try {
-      const ingredientsData = mapItems(ingredients, "ingredient", true);
-      const seasoningsData = mapItems(seasonings, "seasoning", true);
-
+      const ingredientsData = mapItems(ingredients, "ingredient");
+      const seasoningsData = mapItems(seasonings, "seasoning");
       const videoAttributes = videoInfo ? {
-        video_id: videoInfo.video_id,
-        etag: videoInfo.etag,
-        thumbnail_url: videoInfo.thumbnail_url,
-        status: videoInfo.status,
-        is_embeddable: videoInfo.is_embeddable,
-        is_deleted: false,
-        cached_at: videoInfo.cached_at,
+        ...videoInfo,
+        id: "id" in videoInfo && videoInfo.id,
+        ...(videoInfo._destroy ? { _destroy: true } : {}),
       } : undefined;
 
-      const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "PATCH", {
+      const payload = {
         recipe: {
           name, notes,
           ingredients_attributes: [...ingredientsData, ...seasoningsData],
           video_attributes: videoAttributes,
         },
-      });
+      };
+
+      const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "PATCH", payload);
 
       router.push(`/recipes/${recipeId}`);
     } catch (e) {
       console.error("レシピ更新エラー", e);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // 動画をDBから削除するために _destroy: true を付与
+  const markVideoForDeletion = () => {
+    if (videoInfo) {
+      setVideoInfo({ ...videoInfo, _destroy: true });
+    }
+  };
+
+  // 新しい動画で置換。PATCHでDBレコードを更新するため、id は元動画の値をセット。
+  const replaceVideo = (newVideo: VideoWithoutId) => {
+    if (videoInfo?.id) {
+      setVideoInfo({
+        ...videoInfo,
+        ...newVideo,
+        id: videoInfo.id,
+        _destroy: false,
+      });
     }
   };
 
@@ -140,17 +169,15 @@ export default function RecipeEditPage() {
       <section>
         <h2 className="text-lg font-semibold mb-4">材料</h2>
         <div className="max-w-2xl mx-auto space-y-4">
-          {ingredients.map((item, index) => (
+          {ingredients.filter(item => !item._destroy).map((item, index, filtered) => (
             <IngredientFields
               key={item.id}
               index={index}
-              total={ingredients.length}
               item={item}
-              onChange={(key, value) =>
-                handleChange(index, key, value, setIngredients, ingredients)
-              }
+              total={filtered.length}
+              onChange={(key, value) => handleChange(item.id!, key, value, setIngredients, ingredients)}
               onAdd={() => handleAdd(setIngredients, ingredients)}
-              onRemove={() => handleRemove(index, setIngredients, ingredients)}
+              onRemove={() => handleRemove(item.id!, setIngredients, ingredients)}
             />
           ))}
         </div>
@@ -160,17 +187,15 @@ export default function RecipeEditPage() {
       <section>
         <h2 className="text-lg font-semibold mb-4">調味料</h2>
         <div className="max-w-2xl mx-auto space-y-4">
-          {seasonings.map((item, index) => (
+          {seasonings.filter(item => !item._destroy).map((item, index, filtered) => (
             <SeasoningFields
               key={item.id}
               index={index}
-              total={seasonings.length}
               item={item}
-              onChange={(key, value) =>
-                handleChange(index, key, value, setSeasonings, seasonings)
-              }
+              total={filtered.length}
+              onChange={(key, value) => handleChange(item.id!, key, value, setSeasonings, seasonings)}
               onAdd={() => handleAdd(setSeasonings, seasonings)}
-              onRemove={() => handleRemove(index, setSeasonings, seasonings)}
+              onRemove={() => handleRemove(item.id!, setSeasonings, seasonings)}
             />
           ))}
         </div>
@@ -194,6 +219,8 @@ export default function RecipeEditPage() {
         <VideoEmbedBlock
           videoInfo={videoInfo}
           setVideoInfo={setVideoInfo}
+          onDelete={markVideoForDeletion}
+          onReplace={replaceVideo}
         />
 
         {/* 更新ボタン */}

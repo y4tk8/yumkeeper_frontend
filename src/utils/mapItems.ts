@@ -6,12 +6,12 @@ import { Ingredient } from "@/types/ingredient";
 export const mapItems = (
   items: ItemEntry[],
   category: "ingredient" | "seasoning",
-  includeId = false,
 ): Ingredient[] => {
   return items
     .filter((item) => item.name.trim() !== "" || item.amount.trim() !== "") // name と amount どちらも空の行は除外
     .map((item) => {
       const { quantity, unit } = parseAmountToQuantityAndUnit(item.amount);
+
       const base = {
         name: item.name,
         quantity,
@@ -19,7 +19,9 @@ export const mapItems = (
         category,
       };
 
-      return includeId && item.id ? { ...base, id: item.id } : base; // 新規登録ではID不要。更新ではカラム識別のためID付与。
+      const withId = typeof item.id === "number" ? { ...base, id: item.id } : base; // 更新ではレコード識別のためID付与。新規追加ではID不要。
+
+      return item._destroy ? { ...withId, _destroy: true } : withId;
     });
 };
 
