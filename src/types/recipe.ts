@@ -25,6 +25,7 @@ export interface ItemEntry {
   id?: number | string;
   name: string;
   amount: string;
+  _destroy?: boolean;
 }
 
-export type ItemEntryWithoutId = Omit<ItemEntry, "id">;
+export type ItemEntryWithoutId = Omit<ItemEntry, "id" | "_destroy">;
