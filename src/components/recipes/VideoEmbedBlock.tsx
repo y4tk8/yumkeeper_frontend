@@ -2,21 +2,26 @@
 
 import { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { Video } from "@/types/video";
+import { Video, VideoWithoutId } from "@/types/video";
 import { MinusCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 interface VideoProps {
   videoInfo: Video | null;
   setVideoInfo: React.Dispatch<React.SetStateAction<Video | null>>;
+  onDelete?: () => void;
+  onReplace?: (newVideo: VideoWithoutId) => void;
 }
 
-export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps) {
+export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onReplace }: VideoProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
 
   const handleOpenModal = () => setIsOpen(true);
-  const handleCloseModal = () => setIsOpen(false);
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setVideoUrl("");
+  };
 
   // YouTube Data API へリクエストを送る関数
   const fetchVideoInfo = async (videoId: string): Promise<Video | null> => {
@@ -67,22 +72,29 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo }: VideoProps)
         return;
       }
 
-      setVideoInfo(info);
+      // 既存動画あり -> 差し替え / 既存動画なし -> 新しくセット
+      if (videoInfo?.id) {
+        onReplace?.(info);
+      } else {
+        setVideoInfo(info);
+      }
 
-      setIsOpen(false);
     } catch (e) {
       alert("動画情報の取得中にエラーが発生しました");
       console.error(e);
+    } finally {
+      setIsOpen(false);
+      setVideoUrl("");
     }
   };
 
   return (
     <div className="w-full h-64 border border-black rounded-md flex flex-col justify-center items-center gap-4">
-      {videoInfo ? (
+      {videoInfo && !videoInfo._destroy ? (
         <div className="relative w-full h-full">
           {/* 削除ボタン */}
           <button
-            onClick={() => setVideoInfo(null)}
+            onClick={() => videoInfo?.id ? onDelete?.() : setVideoInfo(null)}
             className="absolute top-0 left-0 translate-x-[-50%] translate-y-[-50%] z-10"
             aria-label="動画を削除"
           >
