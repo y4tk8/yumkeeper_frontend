@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useApiClient } from "@/hooks/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
