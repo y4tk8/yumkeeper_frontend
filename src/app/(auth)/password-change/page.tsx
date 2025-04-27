@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useApiClient } from "@/hooks/useApiClient";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 const PasswordChangePage = () => {
+  useRequireAuth(); // 未認証ならリダイレクト
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");

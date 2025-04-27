@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useApiClient } from "@/hooks/useApiClient";
 import { useParams, useRouter } from "next/navigation";
+import { handleAuthorization } from "@/utils/handleAuthorization";
 import { mapItems, mapIngredientsToEntries } from "@/utils/mapItems";
 import { Recipe, ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video, VideoWithoutId } from "@/types/video";
@@ -16,6 +18,8 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function RecipeEditPage() {
+  useRequireAuth(); // 未認証ならリダイレクト
+
   const [name, setName] = useState("");
   const [ingredients, setIngredients] = useState<ItemEntry[]>([{ id: uuidv4(), name: "", amount: "" }]);
   const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ id: uuidv4(), name: "", amount: "" }]);
@@ -30,7 +34,7 @@ export default function RecipeEditPage() {
   // 初期データ取得
   useEffect(() => {
     const fetchRecipe = async () => {
-      if (!userId || !recipeId) return;
+      if (!recipeId) return;
 
       try {
         const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
@@ -136,7 +140,7 @@ export default function RecipeEditPage() {
 
         router.push(`/recipes/${recipeId}`);
       } else {
-        showErrorToast(res.data.error || "レシピの更新に失敗しました");
+        handleAuthorization(res.status, res.data.error);
       }
     } catch (e) {
       showErrorToast("通信エラーが発生しました");

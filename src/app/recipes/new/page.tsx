@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useApiClient } from "@/hooks/useApiClient";
 import { useRouter } from "next/navigation";
 import { mapItems } from "@/utils/mapItems";
 import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
@@ -15,6 +16,8 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function RecipeNewPage() {
+  useRequireAuth(); // 未認証ならリダイレクト
+
   const [name, setName] = useState("");
   const [ingredients, setIngredients] = useState<ItemEntry[]>([{ name: "", amount: "" }]);
   const [seasonings, setSeasonings] = useState<ItemEntry[]>([{ name: "", amount: "" }]);

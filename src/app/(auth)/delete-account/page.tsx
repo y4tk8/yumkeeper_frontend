@@ -2,10 +2,13 @@
 
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useApiClient } from "@/hooks/useApiClient";
 import { AuthContext } from "@/contexts/AuthContext";
 
 const DeleteAccountPage = () => {
+  useRequireAuth(); // 未認証ならリダイレクト
+
   const [isChecked, setIsChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
