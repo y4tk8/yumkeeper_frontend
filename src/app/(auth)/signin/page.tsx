@@ -2,13 +2,16 @@
 
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { apiRequest } from "@/lib/api/apiClient";
+import { useErrorToast } from "@/hooks/useErrorToast";
+import { apiRequest } from "@/lib/apiClient";
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 export default function SingInPage() {
+  useErrorToast(); // 未認証でリダイレクトされてきた場合 -> エラートースト表示
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);

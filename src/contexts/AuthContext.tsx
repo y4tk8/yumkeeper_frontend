@@ -13,6 +13,8 @@ interface AuthContextType {
   userId: number | null;
   setAuthHeaders: (headers: AuthHeaders | null) => void;
   setUserId: (id: number | null) => void;
+  isAuthenticated: boolean;
+  isAuthChecked: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +22,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authHeaders, setAuthHeadersState] = useState<AuthHeaders | null>(null);
   const [userId, setUserIdState] = useState<number | null>(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   // Context と localStorage に認証情報を保存する関数
   const setAuthHeaders = (headers: AuthHeaders | null) => {
@@ -60,10 +63,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUserIdState(id);
       }
     }
+
+    setIsAuthChecked(true);
   }, []);
 
+  // 認証情報とユーザーIDがtrue -> サインイン済み
+  const isAuthenticated = !!authHeaders && !!userId;
+
   return (
-    <AuthContext.Provider value={{ authHeaders, setAuthHeaders, userId, setUserId }}>
+    <AuthContext.Provider
+      value={{
+        authHeaders,
+        userId,
+        setAuthHeaders,
+        setUserId,
+        isAuthenticated,
+        isAuthChecked,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

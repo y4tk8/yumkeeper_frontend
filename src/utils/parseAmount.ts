@@ -1,5 +1,6 @@
-// 材料 or 調味料の `分量` フォームに入力された値を `量` と `単位` に分解
-
+/**
+ * 材料 or 調味料の `分量` フォームに入力された値を `量` と `単位` に分解する関数
+ */
 export function parseAmountToQuantityAndUnit(amount: string): {
   quantity: number | null;
   unit: string;

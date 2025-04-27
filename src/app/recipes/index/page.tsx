@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useApiClient } from "@/hooks/useApiClient";
 import { RecipeCard } from "@/types/recipe";
 import { RecipeResponse } from "@/types/api";
 import { Pagination } from "@/components/ui/Pagination";
@@ -20,6 +21,8 @@ const SORT_OPTIONS = [
 ];
 
 export default function RecipeIndexPage() {
+  useRequireAuth(); // 未認証ならリダイレクト
+
   const [recipes, setRecipes] = useState<RecipeCard[]>([]);
   const [selectedSort, setSelectedSort] = useState("updated_desc");
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -32,8 +35,6 @@ export default function RecipeIndexPage() {
   // レシピ一覧の取得処理
   useEffect(() => {
     const fetchRecipes = async () => {
-      if (!userId) return;
-
       try {
         const query = new URLSearchParams({
           sort: selectedSort,
@@ -66,7 +67,7 @@ export default function RecipeIndexPage() {
 
   // レシピの削除処理
   const deleteRecipe = async () => {
-    if (!deleteId || !userId ) return;
+    if (!deleteId) return;
 
     try {
       const res = await request<RecipeResponse>(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");

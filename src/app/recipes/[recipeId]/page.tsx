@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useApiClient } from "@/lib/api/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useApiClient } from "@/hooks/useApiClient";
 import { useParams } from "next/navigation";
 import { formatAmount } from "@/utils/formatAmount";
 import { Recipe } from "@/types/recipe";
@@ -12,6 +13,8 @@ import VideoDisplay from "@/components/recipes/VideoDisplay";
 import InputField from "@/components/ui/InputField";
 
 export default function RecipeShowPage() {
+  useRequireAuth(); // 未認証ならリダイレクト
+
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const { request, userId } = useApiClient();
   const { recipeId } = useParams();
@@ -19,7 +22,7 @@ export default function RecipeShowPage() {
   // レシピ詳細の取得処理
   useEffect(() => {
     const fetchRecipe = async () => {
-      if (!userId || !recipeId) return;
+      if (!recipeId) return;
 
       try {
         const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");

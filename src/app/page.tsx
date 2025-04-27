@@ -1,6 +1,10 @@
 "use client";
 
+import { useErrorToast } from "@/hooks/useErrorToast";
+
 export default function Home() {
+  useErrorToast(); // 未認可でリダイレクトされてきた場合 -> エラートースト表示
+
   // APIレスポンス取得のハンドラー
   const handleApiRequest = async () => {
     const response = await fetch("http://localhost:8080");
