@@ -2,7 +2,7 @@
 
 import { useEffect, useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { handleAuthorization } from "@/utils/handleAuthorization";
+import { handleClientError } from "@/utils/handleClientError";
 
 // 認証チェック用のフック
 export function useRequireAuth() {
@@ -19,7 +19,7 @@ export function useRequireAuth() {
     if (!isAuthChecked) return;
 
     if (!isAuthenticated) {
-      handleAuthorization(401);
+      handleClientError(401);
     }
   }, [isAuthenticated, isAuthChecked]);
 }
