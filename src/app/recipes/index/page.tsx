@@ -10,7 +10,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -30,12 +30,15 @@ export default function RecipeIndexPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pagination, setPagination] = useState({ page: 1, limit: 20, count: 0, totalPages: 1 });
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { request, userId } = useApiClient();
 
   // レシピ一覧の取得処理
   useEffect(() => {
     const fetchRecipes = async () => {
+      setIsLoading(true);
+
       try {
         const query = new URLSearchParams({
           sort: selectedSort,
@@ -62,6 +65,8 @@ export default function RecipeIndexPage() {
         if (process.env.NODE_ENV !== "production") {
           console.error("APIエラー:", e)
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -132,49 +137,57 @@ export default function RecipeIndexPage() {
         </Menu>
       </div>
 
-      {/* レシピ一覧 */}
-      <div className="space-y-6">
-        {recipes.map((recipe) => (
-          <div
-            key={recipe.id}
-            className="border rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition duration-200"
-            style={{ aspectRatio: "5 / 3" }}
-          >
-            <Link href={`/recipes/${recipe.id}`}>
-              <Image
-                src={recipe.thumbnail_url || "/images/default-thumbnail.jpeg"}
-                alt={`${recipe.name}の動画サムネイル`}
-                width={800}
-                height={480}
-                className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200"
-              />
-            </Link>
-            <div className="grid grid-cols-10 gap-2 items-center px-4 py-3 bg-white">
-              <Link href={`/recipes/${recipe.id}/`} className="col-span-6 text-lg font-semibold hover:underline">
-                {recipe.name}
-              </Link>
-              <Link href={`/recipes/${recipe.id}/edit`} className="col-span-2 text-sm text-green-600 hover:underline">
-                編集
-              </Link>
-              <button
-                onClick={() => openDeleteModal(recipe.id)}
-                className="col-span-2 text-sm text-red-600 hover:underline"
+      {isLoading ? (
+        <div className="flex justify-center items-center h-[calc(100vh-64px)]">
+          <Loader2 className="h-28 w-28 animate-spin text-gray-500"/>
+        </div>
+      ) : (
+        <>
+          {/* レシピ一覧 */}
+          <div className="space-y-6">
+            {recipes.map((recipe) => (
+              <div
+                key={recipe.id}
+                className="border rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition duration-200"
+                style={{ aspectRatio: "5 / 3" }}
               >
-                削除
-              </button>
-            </div>
+                <Link href={`/recipes/${recipe.id}`}>
+                  <Image
+                    src={recipe.thumbnail_url || "/images/default-thumbnail.jpeg"}
+                    alt={`${recipe.name}の動画サムネイル`}
+                    width={800}
+                    height={480}
+                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200"
+                  />
+                </Link>
+                <div className="grid grid-cols-10 gap-2 items-center px-4 py-3 bg-white">
+                  <Link href={`/recipes/${recipe.id}/`} className="col-span-6 text-lg font-semibold hover:underline">
+                    {recipe.name}
+                  </Link>
+                  <Link href={`/recipes/${recipe.id}/edit`} className="col-span-2 text-sm text-green-600 hover:underline">
+                    編集
+                  </Link>
+                  <button
+                    onClick={() => openDeleteModal(recipe.id)}
+                    className="col-span-2 text-sm text-red-600 hover:underline"
+                  >
+                    削除
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* ページネーション */}
-      <div className="mt-8 flex justify-center">
-        <Pagination
-          currentPage={pagination.page}
-          totalPages={pagination.totalPages}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+          {/* ページネーション */}
+          <div className="mt-8 flex justify-center">
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </>
+      )}
 
       {/* 削除モーダル */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

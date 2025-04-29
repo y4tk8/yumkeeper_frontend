@@ -42,16 +42,8 @@ export default function RecipeShowPage() {
     fetchRecipe();
   }, [userId, recipeId]);
 
-  if (!recipe) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>読み込み中...</p>
-      </div>
-    );
-  }
-
-  const ingredients = recipe.ingredients?.filter(item => item.category === "ingredient") || [];
-  const seasonings = recipe.ingredients?.filter(item => item.category === "seasoning") || [];
+  const ingredients = recipe?.ingredients?.filter(item => item.category === "ingredient") || [];
+  const seasonings = recipe?.ingredients?.filter(item => item.category === "seasoning") || [];
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 py-12 px-4">
@@ -62,7 +54,7 @@ export default function RecipeShowPage() {
           <InputField
             type="text"
             placeholder="レシピ名"
-            value={recipe.name}
+            value={recipe?.name}
             readOnly
           />
         </div>
@@ -111,7 +103,7 @@ export default function RecipeShowPage() {
         <h2 className="text-lg font-semibold -mb-4">自由メモ</h2>
         <div className="max-w-2xl mx-auto space-y-8">
           <textarea
-            value={recipe.notes}
+            value={recipe?.notes}
             readOnly
             className="w-full mx-auto h-48 rounded-md border border-black px-4 py-2 my-8"
           />
@@ -120,7 +112,7 @@ export default function RecipeShowPage() {
 
       {/* YouTube 埋め込み */}
       <div className="max-w-2xl mx-auto space-y-8">
-        {recipe.video && (
+        {recipe?.video && (
           <VideoDisplay video={recipe.video} />
         )}
       </div>
