@@ -3,8 +3,8 @@
 import { redirect } from "next/navigation";
 import { showErrorToast } from "@/components/ui/shadcn/sonner";
 
-// 認証・認可のエラーハンドリング関数
-export function handleAuthorization(status: number, message?: string) {
+// `4xx系` のエラーハンドリング関数
+export function handleClientError(status: number, message?: string) {
   if (typeof window === "undefined") return; // SSR対策
 
   switch (status) {

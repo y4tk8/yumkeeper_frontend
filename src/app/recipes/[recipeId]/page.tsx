@@ -5,8 +5,8 @@ import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
 import { useParams } from "next/navigation";
 import { formatAmount } from "@/utils/formatAmount";
+import { handleClientError } from "@/utils/handleClientError";
 import { Recipe } from "@/types/recipe";
-import { showErrorToast } from "@/components/ui/shadcn/sonner";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
 import VideoDisplay from "@/components/recipes/VideoDisplay";
@@ -25,12 +25,14 @@ export default function RecipeShowPage() {
       if (!recipeId) return;
 
       try {
-        const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
+        const res = await request<{ recipe: Recipe }>(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
 
-        setRecipe(res.data.recipe as Recipe); // NOTE: 期限優先でひとまず as Recipe で対応。ジェネリクスが本来はベスト。
+        if (!res.ok) {
+          handleClientError(res.status);
+        }
+
+        setRecipe(res.data.recipe);
       } catch (e) {
-        showErrorToast("通信エラーが発生しました");
-
         if (process.env.NODE_ENV !== "production") {
           console.error("APIエラー:", e)
         }
@@ -40,7 +42,13 @@ export default function RecipeShowPage() {
     fetchRecipe();
   }, [userId, recipeId]);
 
-  if (!recipe) return <div>読み込み中...</div>;
+  if (!recipe) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>読み込み中...</p>
+      </div>
+    );
+  }
 
   const ingredients = recipe.ingredients?.filter(item => item.category === "ingredient") || [];
   const seasonings = recipe.ingredients?.filter(item => item.category === "seasoning") || [];

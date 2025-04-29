@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
 import { useParams, useRouter } from "next/navigation";
-import { handleAuthorization } from "@/utils/handleAuthorization";
+import { handleClientError } from "@/utils/handleClientError";
 import { mapItems, mapIngredientsToEntries } from "@/utils/mapItems";
 import { Recipe, ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video, VideoWithoutId } from "@/types/video";
-import { RecipeResponse } from "@/types/api";
-import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner";
+import { apiResult } from "@/types/api";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import { v4 as uuidv4 } from "uuid";
 import IngredientFields from "@/components/recipes/IngredientFields";
 import SeasoningFields from "@/components/recipes/SeasoningFields";
@@ -37,8 +37,13 @@ export default function RecipeEditPage() {
       if (!recipeId) return;
 
       try {
-        const res = await request(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
-        const recipe = res.data.recipe as Recipe; // NOTE: 期限優先でひとまず as Recipe で対応。ジェネリクスが本来はベスト。
+        const res = await request<{ recipe: Recipe }>(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
+
+        if (!res.ok) {
+          handleClientError(res.status);
+        }
+
+        const recipe = res.data.recipe;
 
         setName(recipe.name);
         setNotes(recipe.notes || "");
@@ -55,8 +60,6 @@ export default function RecipeEditPage() {
           setVideoInfo(recipe.video);
         }
       } catch (e) {
-        showErrorToast("通信エラーが発生しました");
-
         if (process.env.NODE_ENV !== "production") {
           console.error("APIエラー:", e)
         }
@@ -133,18 +136,16 @@ export default function RecipeEditPage() {
         },
       };
 
-      const res = await request<RecipeResponse>(`/api/v1/users/${userId}/recipes/${recipeId}`, "PATCH", payload);
+      const res = await request<apiResult>(`/api/v1/users/${userId}/recipes/${recipeId}`, "PATCH", payload);
 
       if (res.ok) {
         showSuccessToast(res.data.message || "レシピが更新されました");
 
         router.push(`/recipes/${recipeId}`);
       } else {
-        handleAuthorization(res.status, res.data.error);
+        handleClientError(res.status, res.data.error);
       }
     } catch (e) {
-      showErrorToast("通信エラーが発生しました");
-
       if (process.env.NODE_ENV !== "production") {
         console.error("APIエラー:", e)
       }

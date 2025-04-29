@@ -1,4 +1,4 @@
-export interface RecipeResponse {
+export interface apiResult {
   message?: string;
   error?: string;
 }
