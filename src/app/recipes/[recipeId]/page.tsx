@@ -54,7 +54,7 @@ export default function RecipeShowPage() {
           <InputField
             type="text"
             placeholder="レシピ名"
-            value={recipe?.name}
+            value={recipe?.name ?? ""}
             readOnly
           />
         </div>
@@ -103,7 +103,7 @@ export default function RecipeShowPage() {
         <h2 className="text-lg font-semibold -mb-4">自由メモ</h2>
         <div className="max-w-2xl mx-auto space-y-8">
           <textarea
-            value={recipe?.notes}
+            value={recipe?.notes ?? ""}
             readOnly
             className="w-full mx-auto h-48 rounded-md border border-black px-4 py-2 my-8"
           />
