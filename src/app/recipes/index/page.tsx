@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
+import { handleClientError } from "@/utils/handleClientError";
 import { RecipeCard } from "@/types/recipe";
-import { RecipeResponse } from "@/types/api";
+import { apiResult } from "@/types/api";
 import { Pagination } from "@/components/ui/Pagination";
-import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDown, Check } from "lucide-react";
@@ -41,7 +42,11 @@ export default function RecipeIndexPage() {
           page: String(currentPage),
         }).toString();
 
-        const res = await request(`/api/v1/users/${userId}/recipes?${query}`, "GET");
+        const res = await request<{ recipes: RecipeCard[] }>(`/api/v1/users/${userId}/recipes?${query}`, "GET");
+
+        if (!res.ok) {
+          handleClientError(res.status);
+        }
 
         // ページネーション情報を取得
         const headers = res.headers;
@@ -52,10 +57,8 @@ export default function RecipeIndexPage() {
           totalPages: Number(headers.get("Total-Pages")),
         });
 
-        setRecipes(res.data.recipes as RecipeCard[]); // NOTE: 期限優先でひとまず as RecipeCard[] で対応。ジェネリクスが本来はベスト。
+        setRecipes(res.data.recipes);
       } catch (e) {
-        showErrorToast("通信エラーが発生しました");
-
         if (process.env.NODE_ENV !== "production") {
           console.error("APIエラー:", e)
         }
@@ -70,17 +73,15 @@ export default function RecipeIndexPage() {
     if (!deleteId) return;
 
     try {
-      const res = await request<RecipeResponse>(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");
+      const res = await request<apiResult>(`/api/v1/users/${userId}/recipes/${deleteId}`, "DELETE");
 
       if (res.ok) {
         setRecipes((prev) => prev.filter((r) => r.id !== deleteId)); // UIを即時更新
         showSuccessToast(res.data.message || "レシピが削除されました");
       } else {
-        showErrorToast(res.data.error || "レシピの削除に失敗しました");
+        handleClientError(res.status, res.data.error);
       }
     } catch (e) {
-      showErrorToast("通信エラーが発生しました");
-
       if (process.env.NODE_ENV !== "production") {
         console.error("APIエラー:", e)
       }
