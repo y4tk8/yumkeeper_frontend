@@ -45,11 +45,35 @@ export default function RecipeShowPage() {
   const ingredients = recipe?.ingredients?.filter(item => item.category === "ingredient") || [];
   const seasonings = recipe?.ingredients?.filter(item => item.category === "seasoning") || [];
 
+  // 材料・調味料の登録あり -> 通常表示 / 登録なし -> 1行だけダミー表示
+  const displayedIngredients = ingredients.length > 0 ? ingredients : [{ id: "dummy", name: "", quantity: null, unit: "", category: "ingredient" }];
+  const displayedSeasonings = seasonings.length > 0 ? seasonings : [{ id: "dummy", name: "", quantity: null, unit: "", category: "seasoning" }];
+
   return (
-    <div className="max-w-3xl mx-auto space-y-8 py-12 px-4">
+    <div className="max-w-3xl mx-auto space-y-12 py-12 px-4">
+      <div className="flex justify-between items-center">
+        <button
+          className="bg-gray-700 text-white px-4 py-2 rounded-md border border-transparent hover:bg-gray-800 transition"
+        >
+          レシピ一覧へ
+        </button>
+        <div className="flex space-x-4">
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded-md border border-transparent hover:bg-gray-700 transition"
+          >
+            編集
+          </button>
+          <button
+            className="bg-red-600 text-white px-4 py-2 rounded-md border border-transparent hover:bg-red-700 transition"
+          >
+            削除
+          </button>
+        </div>
+      </div>
+
       {/* レシピ名 */}
-      <section>
-        <h2 className="text-lg font-semibold mb-4">レシピ名</h2>
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">レシピ名</h2>
         <div className="max-w-2xl mx-auto">
           <InputField
             type="text"
@@ -61,14 +85,14 @@ export default function RecipeShowPage() {
       </section>
 
       {/* 材料 */}
-      <section>
-        <h2 className="text-lg font-semibold mb-4">材料</h2>
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">材料</h2>
         <div className="max-w-2xl mx-auto space-y-4">
-          {ingredients?.map((item, index) => (
+          {displayedIngredients.map((item, index) => (
             <IngredientFields
               key={item.id}
               index={index}
-              total={ingredients.length}
+              total={displayedIngredients.length}
               item={{
                 name: item.name,
                 amount: formatAmount(item.quantity, item.unit),
@@ -80,14 +104,14 @@ export default function RecipeShowPage() {
       </section>
 
       {/* 調味料 */}
-      <section>
-        <h2 className="text-lg font-semibold mb-4">調味料</h2>
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">調味料</h2>
         <div className="max-w-2xl mx-auto space-y-4">
-          {seasonings?.map((item, index) => (
+          {displayedSeasonings?.map((item, index) => (
             <SeasoningFields
               key={item.id}
               index={index}
-              total={seasonings.length}
+              total={displayedSeasonings.length}
               item={{
                 name: item.name,
                 amount: formatAmount(item.quantity, item.unit),
@@ -99,22 +123,20 @@ export default function RecipeShowPage() {
       </section>
 
       {/* 自由メモ */}
-      <section>
-        <h2 className="text-lg font-semibold -mb-4">自由メモ</h2>
-        <div className="max-w-2xl mx-auto space-y-8">
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">自由メモ</h2>
+        <div className="max-w-2xl mx-auto">
           <textarea
             value={recipe?.notes ?? ""}
             readOnly
-            className="w-full mx-auto h-48 rounded-md border border-black px-4 py-2 my-8"
+            className="w-full mx-auto h-52 rounded-md border border-black px-4 py-2"
           />
         </div>
       </section>
 
       {/* YouTube 埋め込み */}
-      <div className="max-w-2xl mx-auto space-y-8">
-        {recipe?.video && (
-          <VideoDisplay video={recipe.video} />
-        )}
+      <div className="max-w-2xl mx-auto space-y-8 pt-12 pb-24">
+        <VideoDisplay video={recipe?.video ?? null} />
       </div>
     </div>
   );

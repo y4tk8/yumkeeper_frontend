@@ -5,17 +5,19 @@ interface VideoDisplayProps {
 }
 
 export default function VideoDisplay({ video }: VideoDisplayProps) {
-  if (!video) return null;
-
   return (
-    <div className="w-full aspect-video rounded-md overflow-hidden shadow">
-      <iframe
-        width="100%"
-        height="100%"
-        src={`https://www.youtube.com/embed/${video.video_id}`}
-        title="YouTube Video"
-        allowFullScreen
-      />
+    <div className="w-full aspect-video rounded-md overflow-hidden shadow flex items-center justify-center bg-gray-100">
+      {video ? (
+        <iframe
+          width="100%"
+          height="100%"
+          src={`https://www.youtube.com/embed/${video.video_id}`}
+          title="YouTube Video"
+          allowFullScreen
+        />
+      ) : (
+        <p className="text-gray-500 text-lg">動画はありません</p>
+      )}
     </div>
   );
 }
