@@ -10,7 +10,7 @@ export function useRequireAuth() {
 
   // AuthProvider でのラップ漏れがあった際にエラーを出す
   if (!context) {
-    throw new Error("useRequireAuth must be used within an AuthProvider")
+    throw new Error("useRequireAuth must be used within an AuthProvider");
   }
 
   const { isAuthenticated, isAuthChecked } = context;
@@ -22,4 +22,4 @@ export function useRequireAuth() {
       handleClientError(401);
     }
   }, [isAuthenticated, isAuthChecked]);
-}
+};
