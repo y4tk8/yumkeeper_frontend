@@ -106,11 +106,11 @@ export default function RecipeIndexPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">レシピ一覧</h1>
+    <div className="max-w-3xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-bold mb-12">レシピ一覧</h1>
 
-        {/* 並び替え */}
+      {/* 並び替え */}
+      <div className="flex justify-end mb-8">
         <Menu as="div" className="relative inline-block text-left">
           <MenuButton className="flex items-center px-3 py-1 border rounded-md shadow-sm transition hover:bg-gray-100">
             並び替え <ChevronDown className="ml-1 w-4 h-4" />
@@ -127,7 +127,12 @@ export default function RecipeIndexPage() {
                         active ? "bg-gray-100" : ""
                       } w-full text-left px-4 py-2 text-sm text-gray-700 flex items-center`}
                     >
-                      {option.value === selectedSort && <Check className="w-4 h-4 mr-2" />} {option.label}
+                      {option.value === selectedSort ? (
+                        <Check className="w-4 h-4 mr-2" />
+                      ) : (
+                        <span className="w-4 h-4 mr-2"></span>
+                      )}
+                      {option.label}
                     </Button>
                   )}
                 </MenuItem>
@@ -143,33 +148,39 @@ export default function RecipeIndexPage() {
         </div>
       ) : (
         <>
-          {/* レシピ一覧 */}
-          <div className="space-y-6">
+          {/* レシピカード */}
+          <div className="space-y-24">
             {recipes.map((recipe) => (
               <div
                 key={recipe.id}
                 className="border rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition duration-200"
-                style={{ aspectRatio: "5 / 3" }}
               >
                 <Link href={`/recipes/${recipe.id}`}>
                   <Image
                     src={recipe.thumbnail_url || "/images/default-thumbnail.jpeg"}
                     alt={`${recipe.name}の動画サムネイル`}
                     width={800}
-                    height={480}
-                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200"
+                    height={450}
+                    className="w-full object-cover hover:scale-105 transition-transform duration-200"
+                    style={{ aspectRatio: "16 / 9" }}
                   />
                 </Link>
-                <div className="grid grid-cols-10 gap-2 items-center px-4 py-3 bg-white">
-                  <Link href={`/recipes/${recipe.id}/`} className="col-span-6 text-lg font-semibold hover:underline">
+                <div className="grid grid-cols-10 items-center bg-white px-4 py-2">
+                  <Link
+                    href={`/recipes/${recipe.id}/`}
+                    className="col-span-8 text-lg font-semibold p-2 hover:underline"
+                  >
                     {recipe.name}
                   </Link>
-                  <Link href={`/recipes/${recipe.id}/edit`} className="col-span-2 text-sm text-green-600 hover:underline">
+                  <Link
+                    href={`/recipes/${recipe.id}/edit`}
+                    className="col-span-1 text-sm text-green-600 text-center hover:underline"
+                  >
                     編集
                   </Link>
                   <button
                     onClick={() => openDeleteModal(recipe.id)}
-                    className="col-span-2 text-sm text-red-600 hover:underline"
+                    className="col-span-1 text-sm text-red-600 text-center hover:underline"
                   >
                     削除
                   </button>
@@ -179,7 +190,7 @@ export default function RecipeIndexPage() {
           </div>
 
           {/* ページネーション */}
-          <div className="mt-8 flex justify-center">
+          <div className="mt-20 mb-20 flex justify-center">
             <Pagination
               currentPage={pagination.page}
               totalPages={pagination.totalPages}
