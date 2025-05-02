@@ -99,21 +99,24 @@ export default function RecipeNewPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 py-12 px-4">
-      <h1 className="text-2xl font-bold mb-12">レシピを追加</h1>
-      <div className="max-w-2xl mx-auto">
-        {/* レシピ名 */}
-        <InputField
-          type="text"
-          placeholder="レシピ名"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
+    <div className="max-w-3xl mx-auto space-y-12 py-12 px-4">
+      <h1 className="text-2xl font-bold">レシピを追加</h1>
+
+      {/* レシピ名 */}
+      <section className="space-y-4">
+        <div className="max-w-2xl mx-auto">
+          <InputField
+            type="text"
+            placeholder="レシピ名"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+      </section>
 
       {/* 材料 */}
-      <section>
-        <h2 className="text-lg font-semibold mb-4">材料</h2>
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">材料</h2>
         <div className="max-w-2xl mx-auto space-y-4">
           {ingredients.map((item, index) => (
             <IngredientFields
@@ -130,8 +133,8 @@ export default function RecipeNewPage() {
       </section>
 
       {/* 調味料 */}
-      <section>
-        <h2 className="text-lg font-semibold mb-4">調味料</h2>
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">調味料</h2>
         <div className="max-w-2xl mx-auto space-y-4">
           {seasonings.map((item, index) => (
             <SeasoningFields
@@ -148,27 +151,27 @@ export default function RecipeNewPage() {
       </section>
 
       {/* 自由メモ */}
-      <section>
-        <h2 className="text-lg font-semibold -mb-4">自由メモ</h2>
-        <div className="max-w-2xl mx-auto space-y-8">
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">自由メモ</h2>
+        <div className="max-w-2xl mx-auto">
           <textarea
             placeholder="メモを入力できます"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full mx-auto h-40 rounded-md border border-black px-4 py-2 my-8"
+            className="w-full mx-auto h-52 rounded-md border border-black px-4 py-2"
           />
         </div>
       </section>
 
       {/* YouTube 埋め込み */}
-      <div className="max-w-2xl mx-auto space-y-8">
+      <div className="max-w-2xl mx-auto space-y-8 pt-12 pb-24">
         <VideoEmbedBlock
           videoInfo={videoInfo}
           setVideoInfo={setVideoInfo}
         />
 
         {/* 追加ボタン */}
-        <div className="text-center py-24">
+        <div className="text-center pt-28">
           <Button fullWidth onClick={handleSubmit}>
             レシピを追加
           </Button>
