@@ -2,11 +2,12 @@
 
 import { useEffect, useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { handleClientError } from "@/utils/handleClientError";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 
 // 認証チェック用のフック
 export function useRequireAuth() {
   const context = useContext(AuthContext);
+  const { handleClientError } = useClientErrorHandler();
 
   // AuthProvider でのラップ漏れがあった際にエラーを出す
   if (!context) {

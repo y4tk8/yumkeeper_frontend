@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { useParams, useRouter } from "next/navigation";
-import { handleClientError } from "@/utils/handleClientError";
 import { mapItems, mapIngredientsToEntries } from "@/utils/mapItems";
 import { Recipe, ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video, VideoWithoutId } from "@/types/video";
@@ -28,6 +28,7 @@ export default function RecipeEditPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { request, userId } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
   const { recipeId } = useParams();
   const router = useRouter();
 
@@ -41,6 +42,7 @@ export default function RecipeEditPage() {
 
         if (!res.ok) {
           handleClientError(res.status);
+          return;
         }
 
         const recipe = res.data.recipe;

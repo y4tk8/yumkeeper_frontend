@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { useRouter } from "next/navigation";
 import { mapItems } from "@/utils/mapItems";
-import { handleClientError } from "@/utils/handleClientError";
 import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { Video } from "@/types/video";
 import { apiResult } from "@/types/api";
@@ -27,6 +27,7 @@ export default function RecipeNewPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { request, userId } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
   const router = useRouter();
 
   // 材料・調味料の入力変更

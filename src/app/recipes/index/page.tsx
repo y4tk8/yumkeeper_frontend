@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
-import { handleClientError } from "@/utils/handleClientError";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
+import { useErrorToast } from "@/hooks/useErrorToast";
 import { RecipeCard } from "@/types/recipe";
 import { apiResult } from "@/types/api";
 import { Pagination } from "@/components/ui/Pagination";
@@ -23,6 +24,7 @@ const SORT_OPTIONS = [
 
 export default function RecipeIndexPage() {
   useRequireAuth(); // 未認証ならリダイレクト
+  useErrorToast(); // 未認可でリダイレクトされてきた場合 -> エラートースト表示
 
   const [recipes, setRecipes] = useState<RecipeCard[]>([]);
   const [selectedSort, setSelectedSort] = useState("updated_desc");
@@ -33,9 +35,12 @@ export default function RecipeIndexPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const { request, userId } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
 
   // レシピ一覧の取得処理
   useEffect(() => {
+    if (!userId) return;
+
     const fetchRecipes = async () => {
       setIsLoading(true);
 
