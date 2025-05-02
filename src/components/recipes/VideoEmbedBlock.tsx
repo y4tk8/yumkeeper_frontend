@@ -89,17 +89,19 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
   };
 
   return (
-    <div className="w-full h-64 border border-black rounded-md flex flex-col justify-center items-center gap-4">
+    <div className="w-full aspect-video rounded-md shadow flex flex-col items-center justify-center bg-gray-100 relative">
       {videoInfo && !videoInfo._destroy ? (
         <div className="relative w-full h-full">
           {/* 削除ボタン */}
-          <button
-            onClick={() => videoInfo?.id ? onDelete?.() : setVideoInfo(null)}
-            className="absolute top-0 left-0 translate-x-[-50%] translate-y-[-50%] z-10"
-            aria-label="動画を削除"
-          >
-            <MinusCircle className="text-red-500"/>
-          </button>
+          <div className="absolute top-0 left-0">
+            <button
+              onClick={() => videoInfo?.id ? onDelete?.() : setVideoInfo(null)}
+              className="translate-x-[-50%] translate-y-[-50%] z-10"
+              aria-label="動画を削除"
+            >
+              <MinusCircle className="text-red-500 w-8 h-8"/>
+            </button>
+          </div>
 
           {/* YouTube iframe */}
           <iframe
@@ -112,28 +114,29 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
           />
         </div>
       ) : (
-        <>
+        <div className="flex flex-col items-center justify-center gap-8">
           <Button onClick={handleOpenModal}>URLを指定する</Button>
           <Button variant="outline" onClick={() => window.open("https://www.youtube.com", "_blank")}>
             新しいタブでYouTubeを開く
           </Button>
-        </>
+        </div>
       )}
 
       {/* モーダル */}
       <Dialog open={isOpen} onClose={handleCloseModal} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="bg-white p-6 rounded-md space-y-4 max-w-md w-full shadow-md">
-            <DialogTitle className="text-lg font-semibold">URLを入力してください</DialogTitle>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <DialogPanel className="bg-white p-8 rounded-md max-w-md w-full shadow-md">
+            <DialogTitle className="text-lg font-semibold mb-4">URLを入力してください</DialogTitle>
             <input
               type="text"
               placeholder="https://www.youtube.com"
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full border border-gray-300 rounded p-2"
             />
-            <div className="flex justify-between pt-2">
+            <p className="text-sm text-gray-400 pt-2">※ショート動画は指定できません</p>
+            <div className="flex justify-between mt-8">
               <Button variant="outline" onClick={handleCloseModal}>キャンセル</Button>
               <Button onClick={handleConfirmUrl}>OK</Button>
             </div>
