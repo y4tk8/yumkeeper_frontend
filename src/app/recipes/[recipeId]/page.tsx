@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { useParams, useRouter } from "next/navigation";
 import { formatAmount } from "@/utils/formatAmount";
-import { handleClientError } from "@/utils/handleClientError";
 import { Recipe } from "@/types/recipe";
 import { apiResult } from "@/types/api";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
@@ -25,6 +25,7 @@ export default function RecipeShowPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { request, userId } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
   const { recipeId } = useParams();
   const router = useRouter();
 
@@ -38,6 +39,7 @@ export default function RecipeShowPage() {
 
         if (!res.ok) {
           handleClientError(res.status);
+          return;
         }
 
         setRecipe(res.data.recipe);
