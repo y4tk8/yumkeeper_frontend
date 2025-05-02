@@ -32,7 +32,7 @@ export default function RecipeShowPage() {
   // レシピ詳細の取得処理
   useEffect(() => {
     const fetchRecipe = async () => {
-      if (!recipeId) return;
+      if (!userId || !recipeId) return;
 
       try {
         const res = await request<{ recipe: Recipe }>(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");

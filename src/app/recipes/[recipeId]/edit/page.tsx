@@ -35,7 +35,7 @@ export default function RecipeEditPage() {
   // 初期データ取得
   useEffect(() => {
     const fetchRecipe = async () => {
-      if (!recipeId) return;
+      if (!userId || !recipeId) return;
 
       try {
         const res = await request<{ recipe: Recipe }>(`/api/v1/users/${userId}/recipes/${recipeId}`, "GET");
