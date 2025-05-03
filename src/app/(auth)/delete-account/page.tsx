@@ -2,9 +2,11 @@
 
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { AuthContext } from "@/contexts/AuthContext";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 
 const DeleteAccountPage = () => {
   useRequireAuth(); // 未認証ならリダイレクト
@@ -12,9 +14,11 @@ const DeleteAccountPage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const authContext = useContext(AuthContext);
   const router = useRouter();
   const { request } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
 
   // アカウント退会処理
   const handleDeleteAccount = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -24,14 +28,20 @@ const DeleteAccountPage = () => {
     setIsSubmitting(true);
 
     try {
-      await request("/api/v1/auth", "DELETE");
+      const res = await request("/api/v1/auth", "DELETE");
 
-      authContext?.setAuthHeaders(null); // Context と ローカルストレージ の認証情報をクリア
+      if (res.ok) {
+        authContext?.setAuthHeaders(null); // Context と ローカルストレージ の認証情報をクリア
 
-      alert("退会処理が完了しました。ご利用ありがとうございました。");
-      router.push("/");
-    } catch {
-      alert("退会処理に失敗しました。しばらくしてから再試行してください。");
+        showSuccessToast("退会処理が完了しました。ご利用ありがとうございました。");
+        router.push("/");
+      } else {
+        handleClientError(res.status, "退会処理に失敗しました。しばらくしてから再試行してください。");
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e);
+      }
     } finally {
       setIsSubmitting(false);
       setIsModalOpen(false);

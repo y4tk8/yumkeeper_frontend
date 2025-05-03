@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiRequest } from "@/lib/apiClient";
+import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -12,6 +14,9 @@ export default function SingUpPage() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { request } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
   const router = useRouter();
 
   // サインアップ処理
@@ -21,16 +26,25 @@ export default function SingUpPage() {
 
     setIsSubmitting(true);
 
-    try {
-      await apiRequest("/api/v1/auth", "POST", {
-        email,
-        password,
-        password_confirmation: passwordConfirmation,
-      });
+    const payload = {
+      email,
+      password,
+      password_confirmation: passwordConfirmation,
+    };
 
-      router.push("/verify-account");
-    } catch (error) {
-      console.error("サインアップエラー", error);
+    try {
+      const res = await request("/api/v1/auth", "POST", payload);
+
+      if (res.ok) {
+        showSuccessToast("登録ありがとうございます。認証メールを送信しましたのでご確認ください。");
+        router.push("/verify-account");
+      } else {
+        handleClientError(res.status);
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -38,7 +52,7 @@ export default function SingUpPage() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">サインアップ</h2>
+      <h2 className="text-xl font-semibold">登録する</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <InputField
@@ -64,14 +78,14 @@ export default function SingUpPage() {
         />
 
         <Button type="submit" fullWidth disabled={isSubmitting}>
-          {isSubmitting ? "処理中..." : "サインアップ"}
+          {isSubmitting ? "処理中..." : "登録する（無料）"}
         </Button>
       </form>
 
       <div className="flex justify-between text-sm">
         <span>アカウントをお持ちですか？</span>
         <Link href="/signin" className="text-blue-600 hover:underline">
-          サインインはこちら
+          ログインはこちら
         </Link>
       </div>
 
@@ -81,7 +95,7 @@ export default function SingUpPage() {
       </div>
 
       <Button type="button" variant="outline" fullWidth>
-        ゲストとしてサインインする
+        ゲストとして使ってみる
       </Button>
     </div>
   );

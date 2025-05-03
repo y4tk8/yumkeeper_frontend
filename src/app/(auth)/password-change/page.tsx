@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
@@ -13,7 +15,9 @@ const PasswordChangePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { request } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
 
   // 現在のパスワード変更処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,14 +27,27 @@ const PasswordChangePage = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await request("/api/v1/auth/", "PUT", {
+      const payload = {
         current_password: currentPassword,
         password: newPassword,
         password_confirmation: newPasswordConfirmation,
-      });
-      alert("パスワードが変更されました。");
-    } catch (error) {
-      console.error("パスワード変更エラー", error);
+      };
+
+      const res = await request("/api/v1/auth/", "PUT", payload);
+
+      if (res.ok) {
+        showSuccessToast("パスワードが変更されました");
+
+        setCurrentPassword("");
+        setNewPassword("");
+        setNewPasswordConfirmation("");
+      } else {
+        handleClientError(res.status);
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e);
+      }
     } finally {
       setIsSubmitting(false);
     }

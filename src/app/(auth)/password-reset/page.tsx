@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
+import { useRouter } from "next/navigation";
+import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
@@ -9,10 +12,13 @@ const PasswordResetPage = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { request } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
+  const router = useRouter();
 
   // パスワードリセット処理
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return; // 二重送信防止
 
@@ -24,20 +30,36 @@ const PasswordResetPage = () => {
     const resetPasswordToken = params.get("reset_password_token");
 
     if (!resetPasswordToken) {
-      alert("リセットトークンが見つかりません。");
+      showErrorToast("予期せぬエラーが発生しました。お手数ですが、再度お試しください。");
+
       setIsSubmitting(false);
-      return;
+      setPassword("");
+      setPasswordConfirmation("");
+      router.push("/");
     }
 
+    const payload = {
+      password,
+      password_confirmation: passwordConfirmation,
+      reset_password_token: resetPasswordToken,
+    };
+
     try {
-      const res = request("/api/v1/auth/password", "PUT", {
-        password,
-        password_confirmation: passwordConfirmation,
-        reset_password_token: resetPasswordToken,
-      })
-      alert("パスワードがリセットされました。");
+      const res = await request("/api/v1/auth/password", "PUT", payload);
+
+      if (res.ok) {
+        showSuccessToast("パスワードがリセットされました");
+
+        setPassword("");
+        setPasswordConfirmation("");
+        router.push("/");
+      } else {
+        handleClientError(res.status);
+      }
     } catch (e) {
-      console.error("パスワードリセットエラー", e);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e);
+      }
     } finally {
       setIsSubmitting(false);
     }

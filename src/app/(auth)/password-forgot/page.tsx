@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useApiClient } from "@/hooks/useApiClient";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -9,7 +11,9 @@ import Button from "@/components/ui/Button";
 const PasswordForgotPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { request } = useApiClient();
+  const { handleClientError } = useClientErrorHandler();
 
   // パスワードリセットメール送信処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,9 +24,18 @@ const PasswordForgotPage = () => {
 
     try {
       const res = await request("/api/v1/auth/password", "POST", { email });
-      alert("パスワードリセットメールが送信されました。");
+
+      if (res.ok) {
+        showSuccessToast("パスワードリセットメールが送信されました");
+
+        setEmail("");
+      } else {
+        handleClientError(res.status);
+      }
     } catch (e) {
-      console.error("パスワードリセットメール送信エラー", e);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e);
+      }
     } finally {
       setIsSubmitting(false);
     }
