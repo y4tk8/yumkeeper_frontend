@@ -27,7 +27,7 @@ export function useClientErrorHandler() {
         if (process.env.NODE_ENV !== "production") {
           console.warn(`Unhandled status: ${status}`);
         }
-        showErrorToast("予期せぬエラーが発生しました");
+        showErrorToast(message || "予期せぬエラーが発生しました");
         break;
     }
   }
