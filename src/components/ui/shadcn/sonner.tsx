@@ -15,7 +15,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
       toastOptions={{
-        duration: 3000,
+        duration: 4000,
         classNames: {
           toast: "group flex items-start gap-3 p-4 border rounded-2xl shadow-lg max-w-3xl w-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white",
           description: "text-sm text-zinc-700 dark:text-zinc-300",
