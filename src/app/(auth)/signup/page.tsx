@@ -51,52 +51,58 @@ export default function SingUpPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold">登録する</h2>
+    <>
+      <div className="space-y-10">
+        <h2 className="text-xl font-semibold">登録する</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <InputField
-          type="email"
-          placeholder="メールアドレス"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <InputField
-          type="password"
-          placeholder="パスワード"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <InputField
-          type="password"
-          placeholder="パスワード確認用"
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit} className="space-y-10">
+          <div className="space-y-4">
+            <InputField
+              type="email"
+              placeholder="メールアドレス"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <InputField
+              type="password"
+              placeholder="パスワード"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <InputField
+              type="password"
+              placeholder="パスワード確認用"
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              required
+            />
+          </div>
 
-        <Button type="submit" fullWidth disabled={isSubmitting}>
-          {isSubmitting ? "処理中..." : "登録する（無料）"}
+          <Button type="submit" fullWidth disabled={isSubmitting}>
+            {isSubmitting ? "処理中..." : "登録する（無料）"}
+          </Button>
+        </form>
+      </div>
+
+      <div className="space-y-10">
+        <div className="flex justify-between text-sm mt-4">
+          <span>アカウントをお持ちですか？</span>
+          <Link href="/signin" className="text-blue-600 hover:underline">
+            ログインはこちら
+          </Link>
+        </div>
+
+        {/* 区切り線 */}
+        <div className="relative">
+          <span className="absolute inset-x-8 h-px bg-gray-300"></span>
+        </div>
+
+        <Button type="button" variant="outline" fullWidth>
+          ゲストとして使ってみる
         </Button>
-      </form>
-
-      <div className="flex justify-between text-sm">
-        <span>アカウントをお持ちですか？</span>
-        <Link href="/signin" className="text-blue-600 hover:underline">
-          ログインはこちら
-        </Link>
       </div>
-
-      {/* 区切り線 */}
-      <div className="relative y-6">
-        <div className="absolute inset-x-4 top-1/2 h-px bg-gray-300"></div>
-      </div>
-
-      <Button type="button" variant="outline" fullWidth>
-        ゲストとして使ってみる
-      </Button>
-    </div>
+    </>
   );
 }
