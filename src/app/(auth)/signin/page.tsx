@@ -2,12 +2,28 @@
 
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { useErrorToast } from "@/hooks/useErrorToast";
 import { apiRequest } from "@/lib/apiClient";
 import { AuthContext } from "@/contexts/AuthContext";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+
+interface SignInResponse {
+  data: {
+    id: number;
+    email: string;
+    username: string | null;
+    allow_password_change: boolean;
+    is_deleted: boolean;
+    role: string;
+    last_login_at: string | null;
+    provider: string;
+    uid: string;
+  }
+}
 
 export default function SingInPage() {
   useErrorToast(); // 未認証でリダイレクトされてきた場合 -> エラートースト表示
@@ -15,8 +31,10 @@ export default function SingInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const authContext = useContext(AuthContext);
   const router = useRouter();
+  const { handleClientError } = useClientErrorHandler();
 
   // サインイン処理
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,23 +44,30 @@ export default function SingInPage() {
     setIsSubmitting(true);
 
     try {
-      const { data, headers } = await apiRequest("/api/v1/auth/sign_in", "POST", { email, password });
+      const res = await apiRequest<SignInResponse>("/api/v1/auth/sign_in", "POST", { email, password });
 
-      // サインイン成功で Devise Token Auth の認証情報がレスポンスヘッダーに返る
-      // 毎回のAPIリクエストで使えるよう Context に追加
-      authContext?.setAuthHeaders({
-        accessToken: headers.get("access-token") || "",
-        client: headers.get("client") || "",
-        uid: headers.get("uid") || "",
-      });
+      if (res.ok) {
+        // サインイン成功 -> Devise Token Auth の認証情報がレスポンスヘッダーに返る
+        // 毎回のAPIリクエストで使えるよう Context に追加
+        authContext?.setAuthHeaders({
+          accessToken: res.headers.get("access-token") || "",
+          client: res.headers.get("client") || "",
+          uid: res.headers.get("uid") || "",
+        });
 
-      // サインイン成功でユーザーIDを取得と Context に追加
-      const userId = (data as { data: { id: number } }).data.id;
-      authContext?.setUserId(userId);
+        // ユーザーIDを Context に追加
+        const userId = res.data.data.id;
+        authContext?.setUserId(userId);
 
-      router.push("/");
-    } catch (error) {
-      console.error("サインインエラー", error);
+        showSuccessToast("ログインしました");
+        router.push("/");
+      } else {
+        handleClientError(res.status);
+      }
+    } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -50,7 +75,7 @@ export default function SingInPage() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">サインイン</h2>
+      <h2 className="text-xl font-semibold">ログイン</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <InputField
@@ -70,19 +95,19 @@ export default function SingInPage() {
 
         <p className="text-sm text-gray-600">
           <Link href="/password-forgot" className="text-blue-600 hover:underline">
-            パスワードを忘れた場合はこちら
+            パスワードをお忘れですか？
           </Link>
         </p>
 
         <Button type="submit" fullWidth disabled={isSubmitting}>
-          {isSubmitting ? "処理中..." : "サインイン"}
+          {isSubmitting ? "処理中..." : "ログイン"}
         </Button>
       </form>
 
       <div className="flex justify-between text-sm">
         <span>アカウントをお持ちではないですか？</span>
         <Link href="/signup" className="text-blue-600 hover:underline">
-          サインアップはこちら
+          新規登録はこちら
         </Link>
       </div>
 
@@ -92,7 +117,7 @@ export default function SingInPage() {
       </div>
 
       <Button type="button" variant="outline" fullWidth>
-        ゲストとしてサインインする
+        ゲストとして使ってみる
       </Button>
     </div>
   );
