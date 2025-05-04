@@ -14,14 +14,8 @@ interface VideoProps {
 }
 
 export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onReplace }: VideoProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
-
-  const handleOpenModal = () => setIsOpen(true);
-  const handleCloseModal = () => {
-    setIsOpen(false);
-    setVideoUrl("");
-  };
 
   // YouTube Data API へリクエストを送る関数
   const fetchVideoInfo = async (videoId: string): Promise<Video | null> => {
@@ -83,9 +77,15 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
       alert("動画情報の取得中にエラーが発生しました");
       console.error(e);
     } finally {
-      setIsOpen(false);
+      setIsModalOpen(false);
       setVideoUrl("");
     }
+  };
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setVideoUrl("");
   };
 
   return (
@@ -122,8 +122,8 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
         </div>
       )}
 
-      {/* モーダル */}
-      <Dialog open={isOpen} onClose={handleCloseModal} className="relative z-50">
+      {/* URL指定モーダル */}
+      <Dialog open={isModalOpen} onClose={handleCloseModal} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center">
           <DialogPanel className="bg-white p-8 rounded-md max-w-md w-full shadow-md">
