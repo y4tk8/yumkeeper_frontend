@@ -66,30 +66,30 @@ const PasswordResetPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <h2 className="text-xl font-semibold">パスワードリセット</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <InputField
-          type="password"
-          placeholder="新しいパスワード"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <InputField
-          type="password"
-          placeholder="新しいパスワード確認用"
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          required
-        />
-
-        <div className="pt-4">
-          <Button type="submit" fullWidth disabled={isSubmitting}>
-            {isSubmitting ? "送信中..." : "パスワードをリセットする"}
-          </Button>
+      <form onSubmit={handleSubmit} className="space-y-10">
+        <div className="space-y-4">
+          <InputField
+            type="password"
+            placeholder="新しいパスワード"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <InputField
+            type="password"
+            placeholder="新しいパスワード確認用"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            required
+          />
         </div>
+
+        <Button type="submit" fullWidth disabled={isSubmitting}>
+          {isSubmitting ? "処理中..." : "パスワードをリセットする"}
+        </Button>
       </form>
     </div>
   );
