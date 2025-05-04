@@ -22,19 +22,27 @@ export default function Button({
   const variantStyles = (() => {
     switch (variant) {
       case "primary":
-        return "bg-black text-white hover:bg-gray-800";
+        return disabled
+          ? "bg-gray-400 text-white"
+          : "bg-black text-white hover:bg-gray-800";
       case "outline":
-        return "border border-gray-400 text-gray-700 hover:bg-gray-100";
+        return disabled
+          ? "border border-gray-300 text-gray-400"
+          : "border border-gray-400 text-gray-700 hover:bg-gray-100";
       case "destructive":
-        return "bg-red-600 text-white hover:bg-red-700";
+        return disabled
+          ? "bg-gray-400 text-white"
+          : "bg-red-600 text-white hover:bg-red-700";
       case "pagination":
-        return "border border-gray-300 text-gray-700 hover:bg-gray-100";
+        return disabled
+        ? "border border-gray-300 text-gray-400"
+        : "border border-gray-400 text-gray-700 hover:bg-gray-100";
       default:
         return "";
     }
   })();
 
-  const disabledStyles = disabled ? "opacity-50 cursor-not-allowed" : "";
+  const disabledStyles = disabled ? "opacity-70 cursor-not-allowed" : "";
 
   return (
     <button
