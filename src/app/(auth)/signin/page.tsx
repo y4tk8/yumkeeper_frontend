@@ -74,51 +74,57 @@ export default function SingInPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold">ログイン</h2>
+    <>
+      <div className="space-y-10">
+        <h2 className="text-xl font-semibold">ログイン</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <InputField
-          type="email"
-          placeholder="メールアドレス"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <InputField
-          type="password"
-          placeholder="パスワード"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <InputField
+              type="email"
+              placeholder="メールアドレス"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <InputField
+              type="password"
+              placeholder="パスワード"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <p className="text-sm text-gray-600">
-          <Link href="/password-forgot" className="text-blue-600 hover:underline">
-            パスワードをお忘れですか？
+          <p className="text-sm text-gray-600 mt-4 mb-10">
+            <Link href="/password-forgot" className="text-blue-600 hover:underline">
+              パスワードをお忘れですか？
+            </Link>
+          </p>
+
+          <Button type="submit" fullWidth disabled={isSubmitting}>
+            {isSubmitting ? "処理中..." : "ログイン"}
+          </Button>
+        </form>
+      </div>
+
+      <div className="space-y-10">
+        <div className="flex justify-between text-sm mt-4">
+          <span>アカウントをお持ちではないですか？</span>
+          <Link href="/signup" className="text-blue-600 hover:underline">
+            新規登録はこちら
           </Link>
-        </p>
+        </div>
 
-        <Button type="submit" fullWidth disabled={isSubmitting}>
-          {isSubmitting ? "処理中..." : "ログイン"}
+        {/* 区切り線 */}
+        <div className="relative">
+          <div className="absolute inset-x-8 h-px bg-gray-300"></div>
+        </div>
+
+        <Button type="button" variant="outline" fullWidth>
+          ゲストとして使ってみる
         </Button>
-      </form>
-
-      <div className="flex justify-between text-sm">
-        <span>アカウントをお持ちではないですか？</span>
-        <Link href="/signup" className="text-blue-600 hover:underline">
-          新規登録はこちら
-        </Link>
       </div>
-
-      {/* 区切り線 */}
-      <div className="relative y-6">
-        <div className="absolute inset-x-4 top-1/2 h-px bg-gray-300"></div>
-      </div>
-
-      <Button type="button" variant="outline" fullWidth>
-        ゲストとして使ってみる
-      </Button>
-    </div>
+    </>
   );
 }
