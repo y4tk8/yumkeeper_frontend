@@ -15,10 +15,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      <body className="bg-gray-100">
+      <body>
         <AuthProvider>
           <Header />
-          <main>
+          <main role="main">
             <Container>{children}</Container>
           </main>
           <Footer />
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Toaster
           position="top-center"
           toastOptions={{
-            duration: 3000,
+            duration: 4000,
             classNames: {
               toast: "max-w-3xl mx-auto w-full z-[9999]",
             },
