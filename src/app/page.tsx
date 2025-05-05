@@ -61,7 +61,7 @@ export default function Home() {
           <span className="text-3xl font-semibold">Yum Keeper</span>は、動画に特化した料理レシピ保存サービスです。
         </p>
         <p className="mt-4 text-2xl">
-          YouTubeの動画と共にレシピをシンプルに管理しよう！
+        <span className="text-3xl">YouTube</span>の動画と共にレシピをシンプルに管理しよう！
         </p>
       </div>
 
