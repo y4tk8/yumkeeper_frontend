@@ -11,7 +11,7 @@ type RequestBody = Record<string, unknown> | undefined;
 export function useApiClient() {
   const context = useContext(AuthContext);
 
-  // AuthProvider でのラップ漏れがあった際にエラーを出す
+  // AuthProvider のラップ漏れチェック
   if (!context) {
     throw new Error("useApiClient must be used within an AuthProvider");
   }
