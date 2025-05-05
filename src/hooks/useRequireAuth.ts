@@ -9,7 +9,7 @@ export function useRequireAuth() {
   const context = useContext(AuthContext);
   const { handleClientError } = useClientErrorHandler();
 
-  // AuthProvider でのラップ漏れがあった際にエラーを出す
+  // AuthProvider のラップ漏れチェック
   if (!context) {
     throw new Error("useRequireAuth must be used within an AuthProvider");
   }

@@ -8,7 +8,7 @@ import { showErrorToast } from "@/components/ui/shadcn/sonner";
 export const useErrorToast = () => {
   const context = useContext(AuthContext);
 
-  // AuthProvider でのラップ漏れがあった際にエラーを出す
+  // AuthProvider のラップ漏れチェック
   if (!context) {
     throw new Error("useErrorToast must be used within an AuthProvider");
   }
