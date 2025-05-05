@@ -3,37 +3,67 @@
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
+import Image from "next/image";
+import { Plus } from "lucide-react";
 
 export default function Header() {
   const context = useContext(AuthContext);
 
-  // AuthProvider でのラップ漏れがあった際にエラーを出す
+  // AuthProvider のラップ漏れチェック
   if (!context) {
     throw new Error("Header must be used within an AuthProvider.");
   }
 
-  const { authHeaders } = context;
+  const { isAuthenticated, isAuthChecked } = context;
+
+  if (!isAuthChecked) return; // 認証チェック中は何も描画しない（チラつき防止）
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-gray-100 shadow-md flex items-center justify-between px-24 py-4">
+      {/* サービスロゴ */}
       <Link href="/">
-        <h1 className="text-2xl font-bold">Yum Keeper</h1>
+        <h1 className="text-3xl font-bold">Yum Keeper</h1>
       </Link>
+
       <nav>
-        <ul className="flex items-center gap-4">
-          {authHeaders && <li>ログイン中</li>}
+        <ul className="flex items-center gap-8">
+          {/* 認証後のヘッダーリスト */}
+          {isAuthenticated ? (
+            <>
+              <li>
+                <Link href="/recipes/new">
+                  <button className="flex items-center gap-1 px-4 py-2 rounded-full bg-black text-white hover:bg-gray-700 transition">
+                    <Plus size={20}/> レシピ追加
+                  </button>
+                </Link>
+              </li>
 
-          <li>
-            <Link href="/signup">
-              <button className="px-4 py-2 rounded-full bg-black text-white hover:bg-gray-700 transition">
-                登録する
-              </button>
-            </Link>
-          </li>
+              <li>
+                <Image
+                  src="/images/default-profile-image.png"
+                  alt="プロフィール画像"
+                  width={44}
+                  height={44}
+                  className="object-cover"
+                />
+              </li>
+            </>
+          ) : (
+            // 認証前のヘッダーリスト
+            <>
+              <li>
+                <Link href="/signup">
+                  <button className="px-4 py-2 rounded-full bg-black text-white hover:bg-gray-700 transition">
+                    登録する
+                  </button>
+                </Link>
+              </li>
 
-          <li>
-            <Link href="/signin" className="hover:underline">ログイン</Link>
-          </li>
+              <li>
+                <Link href="/signin" className="hover:underline">ログイン</Link>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </header>
