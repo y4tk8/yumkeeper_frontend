@@ -53,7 +53,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         setAuthHeadersState(JSON.parse(storedHeaders));
       } catch (e) {
-        console.error("認証情報の読み込みに失敗しました", e);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("認証トークンの読み込みエラー", e);
+        }
       }
     }
 

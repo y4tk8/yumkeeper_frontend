@@ -17,7 +17,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         duration: 4000,
         classNames: {
-          toast: "group flex items-start gap-3 p-4 border rounded-2xl shadow-lg max-w-3xl w-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white",
+          toast: "group flex items-start gap-4 p-4 border rounded-2xl shadow-lg max-w-3xl w-full bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white",
           description: "text-sm text-zinc-700 dark:text-zinc-300",
           actionButton: "bg-primary text-white rounded-md px-3 py-1",
           cancelButton: "bg-muted text-muted-foreground rounded-md px-3 py-1",
