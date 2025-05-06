@@ -10,8 +10,9 @@ import { apiResult } from "@/types/api";
 import { Pagination } from "@/components/ui/Pagination";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/shadcn/popover";
 import { ChevronDown, Check, Loader2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -116,40 +117,53 @@ export default function RecipeIndexPage() {
 
       {/* 並び替え */}
       <div className="flex justify-end mb-8">
-        <Menu as="div" className="relative inline-block text-left">
-          <MenuButton className="flex items-center px-3 py-1 border rounded-md shadow-sm transition hover:bg-gray-100">
-            並び替え <ChevronDown className="ml-1 w-4 h-4" />
-          </MenuButton>
-          <MenuItems className={`absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200
-                                divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10 focus:outline-none`}>
-            <div className="py-1">
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="flex items-center gap-2 px-4 py-2 border rounded-md shadow-sm transition hover:bg-gray-100">
+              並び替え <ChevronDown className="w-5 h-5" />
+            </button>
+          </PopoverTrigger>
+
+          <PopoverContent
+            className="w-56 rounded-lg bg-white shadow-lg border border-gray-200 p-2 z-50"
+            align="end"
+            sideOffset={10}
+          >
+            <ul className="flex flex-col py-2">
               {SORT_OPTIONS.map((option) => (
-                <MenuItem key={option.value}>
-                  {({ active }: { active: boolean }) => (
-                    <Button
-                      onClick={() => setSelectedSort(option.value)}
-                      className={`${
-                        active ? "bg-gray-100" : ""
-                      } w-full text-left px-4 py-2 text-sm text-gray-700 flex items-center`}
-                    >
-                      {option.value === selectedSort ? (
-                        <Check className="w-4 h-4 mr-2" />
-                      ) : (
-                        <span className="w-4 h-4 mr-2"></span>
-                      )}
-                      {option.label}
-                    </Button>
-                  )}
-                </MenuItem>
+                <li key={option.value}>
+                  <button
+                    onClick={() => setSelectedSort(option.value)}
+                    className={`w-full flex items-center text-left p-3 text-sm text-gray-700 rounded-md transition ${
+                      option.value === selectedSort ? "bg-gray-100" : "hover:bg-gray-100"
+                    }`}
+                  >
+                    {option.value === selectedSort ? (
+                      <Check className="w-4 h-4 mr-2" />
+                    ) : (
+                      <span className="w-4 h-4 mr-2"></span>
+                    )}
+                    {option.label}
+                  </button>
+                </li>
               ))}
-            </div>
-          </MenuItems>
-        </Menu>
+            </ul>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center h-[calc(100vh-64px)]">
+        <div className="flex justify-center items-center py-32">
           <Loader2 className="h-28 w-28 animate-spin text-gray-500"/>
+        </div>
+      ) : recipes.length === 0 ? (
+        <div className="flex flex-col justify-center items-center py-32 text-gray-500 text-lg">
+          <p className="mb-8">レシピがありません</p>
+          <Link href="/recipes/new">
+            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-black text-white text-lg hover:bg-gray-700 transition">
+              <Plus size={20}/> レシピを追加する
+            </button>
+          </Link>
         </div>
       ) : (
         <>
