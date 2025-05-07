@@ -61,7 +61,11 @@ export default function GuestSignInDialog({ open, onClose }: GuestSignInDialogPr
         const userId = res.data.user.id;
         authContext?.setUserId(userId);
 
-        showSuccessToast("ゲストとしてログインしました");
+        // role: "ゲスト" を Context に追加
+        const userRole = res.data.user.role;
+        authContext?.setUserRole(userRole);
+
+        showSuccessToast("ログインしました");
         onClose(); // モーダルを閉じる
         router.push("/");
       } else {
