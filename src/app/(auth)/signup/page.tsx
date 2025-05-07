@@ -8,12 +8,14 @@ import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+import GuestSignInDialog from "@/components/auth/GuestSignInDialog";
 
 export default function SingUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
   const { request } = useApiClient();
   const { handleClientError } = useClientErrorHandler();
@@ -99,10 +101,21 @@ export default function SingUpPage() {
           <span className="absolute inset-x-8 h-px bg-gray-300"></span>
         </div>
 
-        <Button type="button" variant="outline" fullWidth>
+        <Button
+          type="button"
+          variant="outline"
+          fullWidth
+          onClick={() => setIsGuestModalOpen(true)}
+        >
           ゲストとして使ってみる
         </Button>
       </div>
+
+      {/* ゲストサインインモーダル */}
+      <GuestSignInDialog
+        open={isGuestModalOpen}
+        onClose={() => setIsGuestModalOpen(false)}
+      />
     </>
   );
 }

@@ -10,6 +10,7 @@ import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Link from "next/link";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+import GuestSignInDialog from "@/components/auth/GuestSignInDialog";
 
 interface SignInResponse {
   data: {
@@ -17,11 +18,11 @@ interface SignInResponse {
     email: string;
     username: string | null;
     allow_password_change: boolean;
-    is_deleted: boolean;
+    is_deleted: false;
     role: string;
-    last_login_at: string | null;
-    provider: string;
+    provider: "email";
     uid: string;
+    last_login_at: string | null;
   }
 }
 
@@ -31,6 +32,7 @@ export default function SingInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
   const authContext = useContext(AuthContext);
   const router = useRouter();
@@ -121,10 +123,21 @@ export default function SingInPage() {
           <div className="absolute inset-x-8 h-px bg-gray-300"></div>
         </div>
 
-        <Button type="button" variant="outline" fullWidth>
+        <Button
+          type="button"
+          variant="outline"
+          fullWidth
+          onClick={() => setIsGuestModalOpen(true)}
+        >
           ゲストとして使ってみる
         </Button>
       </div>
+
+      {/* ゲストサインインモーダル */}
+      <GuestSignInDialog
+        open={isGuestModalOpen}
+        onClose={() => setIsGuestModalOpen(false)}
+      />
     </>
   );
 }
