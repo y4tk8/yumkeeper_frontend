@@ -22,19 +22,24 @@ export default function Header() {
     throw new Error("Header must be used within an AuthProvider.");
   }
 
-  const { isAuthenticated, isAuthChecked, setAuthHeaders, setUserId } = context;
+  const { isAuthenticated, isAuthChecked, setAuthHeaders, setUserId, userRole, setUserRole } = context;
 
   if (!isAuthChecked) return; // 認証チェック中は何も描画しない（チラつき防止）
 
   // サインアウト処理
   const handleSignOut = async () => {
     try {
-      const res = await request("/api/v1/auth/sign_out", "DELETE");
+      const endpoint = userRole === "ゲスト"
+        ? "/api/v1/auth/guest_user"
+        : "/api/v1/auth/sign_out";
+
+      const res = await request(endpoint, "DELETE");
 
       if (res.ok) {
-        // クライアント側の認証情報 & ユーザーIDを削除
+        // Contextとローカル情報をクリア
         setAuthHeaders(null);
         setUserId(null);
+        setUserRole(null);
 
         showSuccessToast("ログアウトしました");
         router.push("/");
@@ -71,13 +76,19 @@ export default function Header() {
               <li>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Image
-                      src="/images/default-profile-image.png"
-                      alt="プロフィール画像"
-                      width={44}
-                      height={44}
-                      className="object-cover rounded-full cursor-pointer"
-                    />
+                    {userRole === "ゲスト" ? (
+                      <span className="text-green-600 cursor-pointer hover:underline text-lg">
+                        ゲスト
+                      </span>
+                    ) : (
+                      <Image
+                        src="/images/default-profile-image.png"
+                        alt="プロフィール画像"
+                        width={44}
+                        height={44}
+                        className="object-cover rounded-full cursor-pointer"
+                      />
+                    )}
                   </PopoverTrigger>
 
                   {/* メニューモーダル */}
