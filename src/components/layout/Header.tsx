@@ -112,15 +112,15 @@ export default function Header() {
             // 認証前のヘッダーリスト
             <>
               <li>
+                <Link href="/signin" className="hover:underline">ログイン</Link>
+              </li>
+
+              <li>
                 <Link href="/signup">
                   <button className="px-4 py-2 rounded-full bg-black text-white hover:bg-gray-700 transition">
                     登録する
                   </button>
                 </Link>
-              </li>
-
-              <li>
-                <Link href="/signin" className="hover:underline">ログイン</Link>
               </li>
             </>
           )}
