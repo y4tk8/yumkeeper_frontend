@@ -38,7 +38,7 @@ export default function SingUpPage() {
       const res = await request("/api/v1/auth", "POST", payload);
 
       if (res.ok) {
-        showSuccessToast("認証メールを送信しましたのでご確認ください");
+        showSuccessToast("アカウント認証メールを送信しました");
         router.push("/verify-account");
       } else {
         handleClientError(res.status);
