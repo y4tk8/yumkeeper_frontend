@@ -31,7 +31,9 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
     return {
       video_id: videoId,
       etag: item.etag,
-      thumbnail_url: item.snippet.thumbnails?.medium?.url ?? "",
+      thumbnail_url: item.snippet.thumbnails?.high?.url
+                  ?? item.snippet.thumbnails?.medium?.url
+                  ?? "",
       status: item.status.privacyStatus,
       is_embeddable: item.status.embeddable,
       is_deleted: false,
