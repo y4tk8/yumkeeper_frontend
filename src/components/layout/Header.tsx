@@ -99,6 +99,20 @@ export default function Header() {
                   >
                     <ul className="flex flex-col gap-4">
                       <li>
+                        {userRole === "ゲスト" ? (
+                          <span className="block text-gray-400 cursor-not-allowed rounded-md p-2">
+                            アカウント設定
+                          </span>
+                        ) : (
+                          <Link
+                            href="/account/settings"
+                            className="block text-gray-700 hover:bg-gray-100 rounded-md p-2 transition"
+                          >
+                            アカウント設定
+                          </Link>
+                        )}
+                      </li>
+                      <li>
                         <Link
                           href="/recipes/index"
                           className="block text-gray-700 hover:bg-gray-100 rounded-md p-2 transition"
