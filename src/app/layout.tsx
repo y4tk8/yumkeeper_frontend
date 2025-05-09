@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/shadcn/sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
+import ScrollToTopOnRouteChange from "@/components/layout/ScrollToTopOnRouteChange";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja">
       <body>
         <AuthProvider>
+          <ScrollToTopOnRouteChange />
           <Header />
           <main role="main">
             <Container>{children}</Container>
