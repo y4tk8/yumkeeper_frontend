@@ -157,13 +157,8 @@ export default function RecipeIndexPage() {
           <Loader2 className="h-28 w-28 animate-spin text-gray-500"/>
         </div>
       ) : recipes.length === 0 ? (
-        <div className="flex flex-col justify-center items-center py-32 text-gray-500 text-lg">
-          <p className="mb-8">レシピがありません</p>
-          <Link href="/recipes/new">
-            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-black text-white text-lg hover:bg-gray-700 transition">
-              <Plus size={20}/> レシピを追加する
-            </button>
-          </Link>
+        <div className="flex flex-col justify-center items-center py-32 text-gray-500 text-xl">
+          レシピがありません
         </div>
       ) : (
         <>
