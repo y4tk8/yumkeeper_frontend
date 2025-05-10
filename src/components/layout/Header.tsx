@@ -22,7 +22,15 @@ export default function Header() {
     throw new Error("Header must be used within an AuthProvider.");
   }
 
-  const { isAuthenticated, isAuthChecked, setAuthHeaders, setUserId, userRole, setUserRole } = context;
+  const {
+    setAuthHeaders,
+    setUserId,
+    userRole,
+    setUserRole,
+    isAuthenticated,
+    isAuthChecked,
+    setHasSignedOutOrDeleted,
+  } = context;
 
   if (!isAuthChecked) return; // 認証チェック中は何も描画しない（チラつき防止）
 
@@ -40,6 +48,9 @@ export default function Header() {
         setAuthHeaders(null);
         setUserId(null);
         setUserRole(null);
+
+        // 認証エラー防止
+        setHasSignedOutOrDeleted(true);
 
         showSuccessToast("ログアウトしました");
         router.push("/");
