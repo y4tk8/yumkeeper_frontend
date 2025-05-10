@@ -11,7 +11,10 @@ import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Button from "@/components/ui/Button";
 
 const DeleteAccountPage = () => {
-  useRequireAuth(); // 未認証ならリダイレクト
+  // 未認証ならリダイレクト
+  // NOTE: 退会処理中は isDeleting = true で認証チェックをスキップする。これがないと退会後のリダイレクト前に認証エラーが出る。
+  const [isDeleting, setIsDeleting] = useState(false);
+  useRequireAuth(isDeleting);
 
   const [isChecked, setIsChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,17 +31,21 @@ const DeleteAccountPage = () => {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
+    setIsDeleting(true);
 
     try {
       const res = await request("/api/v1/auth", "DELETE");
 
       if (res.ok) {
-        authContext?.setAuthHeaders(null); // Context と ローカルストレージ の認証情報をクリア
+         // Contextとローカルストレージの認証情報 & ユーザーIDをクリア
+        authContext?.setAuthHeaders(null);
+        authContext?.setUserId(null);
 
-        showSuccessToast("退会処理が完了しました。ご利用ありがとうございました。");
+        showSuccessToast("退会しました。ご利用ありがとうございました。");
+
         router.push("/");
       } else {
-        handleClientError(res.status, "退会処理に失敗しました。しばらくしてから再試行してください。");
+        handleClientError(res.status, "退会に失敗しました。しばらくしてから再試行してください。");
       }
     } catch (e) {
       if (process.env.NODE_ENV !== "production") {
@@ -47,6 +54,9 @@ const DeleteAccountPage = () => {
     } finally {
       setIsSubmitting(false);
       setIsModalOpen(false);
+      setTimeout(() => {
+        setIsDeleting(false); // useRequireAuth に引っかからないよう0.1秒のディレイ
+      }, 100);
     }
   };
 
