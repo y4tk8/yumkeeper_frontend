@@ -5,7 +5,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 
 // 認証チェック用のフック
-export function useRequireAuth() {
+export function useRequireAuth(skip = false) {
   const context = useContext(AuthContext);
   const { handleClientError } = useClientErrorHandler();
 
@@ -17,6 +17,7 @@ export function useRequireAuth() {
   const { isAuthenticated, isAuthChecked } = context;
 
   useEffect(() => {
+    if (skip) return;
     if (!isAuthChecked) return;
 
     if (!isAuthenticated) {
