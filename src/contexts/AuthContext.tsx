@@ -17,6 +17,8 @@ interface AuthContextType {
   setUserRole: (role: string | null) => void;
   isAuthenticated: boolean;
   isAuthChecked: boolean;
+  hasSignedOutOrDeleted: boolean;
+  setHasSignedOutOrDeleted: (value: boolean) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,8 +28,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userId, setUserIdState] = useState<number | null>(null);
   const [userRole, setUserRoleState] = useState<string | null>(null);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const [hasSignedOutOrDeleted, setHasSignedOutOrDeleted] = useState(false);
 
-  // State と localStorage に認証情報を保存する関数
+  // State と ローカルストレージ に認証情報を保存する関数
   const setAuthHeaders = (headers: AuthHeaders | null) => {
     setAuthHeadersState(headers);
     if (headers) {
@@ -37,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // State と localStorage にユーザーIDを保存する関数
+  // State と ローカルストレージ にユーザーIDを保存する関数
   const setUserId = (id: number | null) => {
     setUserIdState(id);
     if (id !== null) {
@@ -57,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // 初回マウント時に localStorage から復元
+  // 初回マウント時に ローカルストレージ から復元
   useEffect(() => {
     const storedHeaders = localStorage.getItem("authHeaders");
     const storedUserId = localStorage.getItem("userId");
@@ -101,6 +104,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUserRole,
         isAuthenticated,
         isAuthChecked,
+        hasSignedOutOrDeleted,
+        setHasSignedOutOrDeleted,
       }}
     >
       {children}
