@@ -11,19 +11,23 @@ import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Button from "@/components/ui/Button";
 
 const DeleteAccountPage = () => {
-  // 未認証ならリダイレクト
-  // NOTE: 退会処理中は isDeleting = true で認証チェックをスキップする。これがないと退会後のリダイレクト前に認証エラーが出る。
-  const [isDeleting, setIsDeleting] = useState(false);
-  useRequireAuth(isDeleting);
+  useRequireAuth();
 
   const [isChecked, setIsChecked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const authContext = useContext(AuthContext);
+  const context = useContext(AuthContext);
   const router = useRouter();
   const { request } = useApiClient();
   const { handleClientError } = useClientErrorHandler();
+
+  // AuthProvider のラップ漏れチェック
+  if (!context) {
+    throw new Error("DeleteAccountPage must be used within an AuthProvider.");
+  }
+
+  const { setAuthHeaders, setUserId, setHasSignedOutOrDeleted } = context;
 
   // アカウント退会処理
   const handleDeleteAccount = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -31,18 +35,19 @@ const DeleteAccountPage = () => {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
-    setIsDeleting(true);
 
     try {
       const res = await request("/api/v1/auth", "DELETE");
 
       if (res.ok) {
-         // Contextとローカルストレージの認証情報 & ユーザーIDをクリア
-        authContext?.setAuthHeaders(null);
-        authContext?.setUserId(null);
+        // Contextとローカルストレージの認証情報 & ユーザーIDをクリア
+        setAuthHeaders(null);
+        setUserId(null);
+
+        // 認証エラー防止
+        setHasSignedOutOrDeleted(true);
 
         showSuccessToast("退会しました。ご利用ありがとうございました。");
-
         router.push("/");
       } else {
         handleClientError(res.status, "退会に失敗しました。しばらくしてから再試行してください。");
@@ -54,9 +59,6 @@ const DeleteAccountPage = () => {
     } finally {
       setIsSubmitting(false);
       setIsModalOpen(false);
-      setTimeout(() => {
-        setIsDeleting(false); // useRequireAuth に引っかからないよう0.1秒のディレイ
-      }, 100);
     }
   };
 
