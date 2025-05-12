@@ -105,7 +105,7 @@ export default function RecipeShowPage() {
       <div className="flex justify-between items-center">
         <button
           onClick={() => router.push("/recipes/index")}
-          className="bg-gray-700 text-white px-4 py-2 rounded-md border border-transparent hover:bg-gray-800 transition"
+          className="bg-gray-500 text-white px-4 py-2 rounded-md border border-transparent hover:bg-gray-700 transition"
         >
           レシピ一覧へ
         </button>
@@ -183,7 +183,7 @@ export default function RecipeShowPage() {
           <textarea
             value={recipe?.notes ?? ""}
             readOnly
-            className="w-full mx-auto h-52 rounded-md border border-black px-4 py-2"
+            className="w-full mx-auto h-52 rounded-md border border-gray-400 px-4 py-2"
           />
         </div>
       </section>
