@@ -22,22 +22,22 @@ export default function Home() {
     return (
       <section className="py-32">
         {/* コピー文 */}
-        <h2 className="text-4xl font-semibold text-left">
+        <h2 className="text-4xl font-semibold text-gray-800 text-left">
           レシピ探しも、管理も、これひとつでOK。
         </h2>
-        <h2 className="text-4xl font-semibold text-left mt-6">
+        <h2 className="text-4xl font-semibold text-gray-800 text-left mt-6">
           保存しておけば、作りたくなる日が来る。
         </h2>
 
         <div className="mt-56 flex items-center gap-16">
           <Link href="/recipes/new">
-            <button className="flex items-center gap-2 px-8 py-4 rounded-full bg-black text-white text-lg font-semibold hover:bg-gray-700 transition ml-2">
+            <button className="flex items-center gap-2 px-8 py-4 rounded-full bg-red-800 text-white text-lg font-semibold hover:bg-red-900 transition ml-2">
               <Plus size={20}/> レシピを追加する
             </button>
           </Link>
 
           <Link href="/recipes/index">
-            <span className="text-xl text-gray-700 hover:underline">
+            <span className="text-xl text-gray-800 hover:underline">
               レシピ一覧へ
             </span>
           </Link>
@@ -50,17 +50,17 @@ export default function Home() {
   return (
     <section className="py-32">
       {/* メインコピー */}
-      <h1 className="text-7xl font-bold text-left">
+      <h1 className="text-7xl font-bold text-left text-gray-800">
         料理レシピは活字より、<br />
-        <span className="inline-block w-full text-right mt-8">動画派のあなたへ。</span>
+        <span className="inline-block w-full text-gray-800 text-right mt-8">動画派のあなたへ。</span>
       </h1>
 
       {/* サブコピー */}
-      <div className="mt-20 text-center">
+      <div className="text-gray-700 text-center mt-20">
         <p className="text-2xl">
-          <span className="text-3xl font-semibold">Yum Keeper</span>は、動画に特化した料理レシピ保存サービスです。
+          <span className="text-3xl font-semibold text-black">Yum Keeper</span>は、動画に特化した料理レシピ保存サービスです。
         </p>
-        <p className="mt-4 text-2xl">
+        <p className="text-2xl mt-4">
         <span className="text-3xl">YouTube</span>の動画と共にレシピをシンプルに管理しよう！
         </p>
       </div>
@@ -68,7 +68,7 @@ export default function Home() {
       {/* サインアップボタン */}
       <div className="mt-32 text-center">
         <Link href="/signup">
-          <button className="px-8 py-4 rounded-full bg-black text-white text-lg font-semibold hover:bg-gray-700 transition">
+          <button className="px-8 py-4 rounded-full bg-red-800 text-white text-lg font-semibold  hover:bg-red-900 transition">
             登録する
           </button>
         </Link>
