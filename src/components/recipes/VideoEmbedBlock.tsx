@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Video, VideoWithoutId } from "@/types/video";
 import { MinusCircle } from "lucide-react";
+import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
 interface VideoProps {
@@ -91,7 +92,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
   };
 
   return (
-    <div className="w-full aspect-video rounded-md shadow flex flex-col items-center justify-center bg-gray-100 relative">
+    <div className="w-full aspect-video flex flex-col items-center justify-center bg-white border border-gray-400 rounded-md shadow relative">
       {videoInfo && !videoInfo._destroy ? (
         <div className="relative w-full h-full">
           {/* 削除ボタン */}
@@ -117,7 +118,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center gap-8">
-          <Button onClick={handleOpenModal}>URLを指定する</Button>
+          <Button variant="secondary" onClick={handleOpenModal}>URLを指定する</Button>
           <Button variant="outline" onClick={() => window.open("https://www.youtube.com", "_blank")}>
             新しいタブでYouTubeを開く
           </Button>
@@ -130,17 +131,16 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
         <div className="fixed inset-0 flex items-center justify-center">
           <DialogPanel className="bg-white p-8 rounded-md max-w-md w-full shadow-md">
             <DialogTitle className="text-lg font-semibold mb-4">URLを入力してください</DialogTitle>
-            <input
+            <InputField
               type="text"
               placeholder="https://www.youtube.com"
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
-              className="w-full border border-gray-300 rounded p-2"
             />
             <p className="text-sm text-gray-400 pt-2">※ショート動画は指定できません</p>
             <div className="flex justify-between mt-8">
               <Button variant="outline" onClick={handleCloseModal}>キャンセル</Button>
-              <Button onClick={handleConfirmUrl}>OK</Button>
+              <Button variant="secondary" onClick={handleConfirmUrl}>OK</Button>
             </div>
           </DialogPanel>
         </div>
