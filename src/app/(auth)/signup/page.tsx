@@ -103,7 +103,7 @@ export default function SingUpPage() {
 
         <Button
           type="button"
-          variant="outline"
+          variant="guest"
           fullWidth
           onClick={() => setIsGuestModalOpen(true)}
         >
