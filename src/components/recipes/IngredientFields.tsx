@@ -48,7 +48,7 @@ export default function IngredientFields({
           placeholder="材料名"
           value={item.name}
           onChange={(e) => onChange?.("name", e.target.value)}
-          className="flex-[7] border p-2 rounded"
+          className="flex-[7] border border-gray-400 p-2 rounded"
           readOnly={readOnly}
         />
         <input
@@ -56,7 +56,7 @@ export default function IngredientFields({
           placeholder="分量"
           value={item.amount}
           onChange={(e) => onChange?.("amount", e.target.value)}
-          className="flex-[3] border p-2 rounded"
+          className="flex-[3] border border-gray-400 p-2 rounded"
           readOnly={readOnly}
         />
       </div>
