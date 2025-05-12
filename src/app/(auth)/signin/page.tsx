@@ -32,6 +32,7 @@ export default function SingInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
   const authContext = useContext(AuthContext);
@@ -44,9 +45,14 @@ export default function SingInPage() {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
+    setAuthError(null);
 
     try {
-      const res = await apiRequest<SignInResponse>("/api/v1/auth/sign_in", "POST", { email, password });
+      const res = await apiRequest<SignInResponse | { errors: string[] }>(
+        "/api/v1/auth/sign_in",
+        "POST",
+        { email, password }
+      );
 
       if (res.ok) {
         // サインイン成功 -> Devise Token Auth の認証情報がレスポンスヘッダーに返る
@@ -58,13 +64,19 @@ export default function SingInPage() {
         });
 
         // ユーザーIDを Context に追加
-        const userId = res.data.data.id;
+        const userId = (res.data as SignInResponse).data.id;
         authContext?.setUserId(userId);
 
         showSuccessToast("ログインしました");
         router.push("/");
       } else {
-        handleClientError(res.status);
+        const resBody = res.data as { errors?: string[] };
+
+        if (resBody.errors && resBody.errors.length > 0) {
+          setAuthError(resBody.errors[0]);
+        } else {
+          handleClientError(res.status);
+        }
       }
     } catch (e) {
       if (process.env.NODE_ENV !== "production") {
@@ -86,16 +98,26 @@ export default function SingInPage() {
               type="email"
               placeholder="メールアドレス"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setAuthError(null);
+              }}
               required
             />
+
             <InputField
               type="password"
               placeholder="パスワード"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setAuthError(null);
+              }}
               required
             />
+            {authError && (
+              <p className="text-sm text-red-600">{authError}</p>
+            )}
           </div>
 
           <p className="text-sm text-gray-600 mt-4 mb-10">
