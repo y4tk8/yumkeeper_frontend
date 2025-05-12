@@ -119,7 +119,7 @@ export default function RecipeIndexPage() {
       <div className="flex justify-end mb-8">
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex items-center gap-2 px-4 py-2 border rounded-md shadow-sm transition hover:bg-gray-100">
+            <button className="flex items-center gap-2 px-4 py-2 border border-gray-400 text-gray-700 rounded-md shadow-sm hover:bg-gray-100 transition">
               並び替え <ChevronDown className="w-5 h-5" />
             </button>
           </PopoverTrigger>
