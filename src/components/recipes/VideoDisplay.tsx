@@ -6,7 +6,7 @@ interface VideoDisplayProps {
 
 export default function VideoDisplay({ video }: VideoDisplayProps) {
   return (
-    <div className="w-full aspect-video rounded-md overflow-hidden shadow flex items-center justify-center bg-gray-100">
+    <div className="w-full aspect-video rounded-md overflow-hidden shadow flex items-center justify-center bg-white border border-gray-400">
       {video ? (
         <iframe
           width="100%"
