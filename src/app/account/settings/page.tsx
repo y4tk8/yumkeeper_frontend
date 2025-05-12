@@ -13,15 +13,15 @@ export default function AccountSettingsPage() {
 
       <div className="flex flex-col sm:flex-row justify-center gap-40">
         {/* パスワード変更 */}
-        <Link href="/password-change" className="group flex flex-col items-center justify-center border border-gray-300 rounded-2xl p-8 w-60 h-60 hover:shadow-md transition">
+        <Link href="/password-change" className="group flex flex-col items-center justify-center border border-gray-400 rounded-2xl p-8 w-60 h-60 hover:shadow-md transition">
           <Lock size={96} className="text-gray-700 mb-12" />
           <span className="text-xl text-gray-700 group-hover:underline">パスワード変更</span>
         </Link>
 
         {/* 退会 */}
-        <Link href="/delete-account" className="group flex flex-col items-center justify-center border border-gray-300 rounded-2xl p-8 w-60 h-60 hover:shadow-md transition">
+        <Link href="/delete-account" className="group flex flex-col items-center justify-center border border-gray-400 rounded-2xl p-8 w-60 h-60 hover:shadow-md transition">
           <LogOut size={96} className="text-gray-700 mb-12" />
-          <span className="text-xl ext-gray-700 group-hover:underline">退会</span>
+          <span className="text-xl text-gray-700 group-hover:underline">退会</span>
         </Link>
       </div>
     </div>

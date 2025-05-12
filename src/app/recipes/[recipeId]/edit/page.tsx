@@ -235,7 +235,7 @@ export default function RecipeEditPage() {
             placeholder="メモを入力できます"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full mx-auto h-52 rounded-md border border-black px-4 py-2"
+            className="w-full mx-auto h-52 rounded-md border border-gray-400 px-4 py-2"
           />
         </div>
       </section>

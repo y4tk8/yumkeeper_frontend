@@ -65,7 +65,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-gray-100 shadow-md flex items-center justify-between px-24 py-4">
+    <header className="fixed top-0 left-0 w-full z-50 bg-stone-50 shadow-md flex items-center justify-between px-24 py-4">
       {/* サービスロゴ */}
       <Link href="/">
         <h1 className="text-3xl font-bold">Yum Keeper</h1>
@@ -78,7 +78,7 @@ export default function Header() {
             <>
               <li>
                 <Link href="/recipes/new">
-                  <button className="flex items-center gap-1 px-4 py-2 rounded-full bg-black text-white hover:bg-gray-700 transition">
+                  <button className="flex items-center gap-1 px-4 py-2 rounded-full bg-red-800 text-white hover:bg-red-900 transition">
                     <Plus size={20}/> レシピ追加
                   </button>
                 </Link>
@@ -88,7 +88,7 @@ export default function Header() {
                 <Popover>
                   <PopoverTrigger asChild>
                     {userRole === "ゲスト" ? (
-                      <span className="text-green-600 cursor-pointer hover:underline text-lg">
+                      <span className="text-emerald-500 cursor-pointer hover:underline text-lg">
                         ゲスト
                       </span>
                     ) : (
@@ -153,7 +153,7 @@ export default function Header() {
 
               <li>
                 <Link href="/signup">
-                  <button className="px-4 py-2 rounded-full bg-black text-white hover:bg-gray-700 transition">
+                  <button className="px-4 py-2 rounded-full bg-red-800 text-white hover:bg-red-900 transition">
                     登録する
                   </button>
                 </Link>

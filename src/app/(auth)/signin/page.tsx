@@ -125,7 +125,7 @@ export default function SingInPage() {
 
         <Button
           type="button"
-          variant="outline"
+          variant="guest"
           fullWidth
           onClick={() => setIsGuestModalOpen(true)}
         >

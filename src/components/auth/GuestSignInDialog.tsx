@@ -90,14 +90,14 @@ export default function GuestSignInDialog({ open, onClose }: GuestSignInDialogPr
           <div className="text-sm text-gray-600">
             <ul className="list-disc pl-5 space-y-1">
               <li>すべての機能を利用可能です</li>
-              <li>終了する場合、ページ右上の<span className="underline">ゲスト</span>から「ログアウト」を選択してください</li>
+              <li>終了する場合、ページ右上の<span className="text-emerald-500 underline">ゲスト</span>から「ログアウト」を選択してください</li>
               <li>ログアウトすると保存したすべてのレシピは破棄されます</li>
             </ul>
           </div>
 
           <div className="flex justify-between mt-12">
             <Button variant="outline" onClick={onClose}>キャンセル</Button>
-            <Button onClick={handleGuestSignIn} disabled={isSubmitting}>
+            <Button variant="guest" onClick={handleGuestSignIn} disabled={isSubmitting}>
               {isSubmitting ? "処理中..." : "ログイン"}
             </Button>
           </div>
