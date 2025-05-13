@@ -8,10 +8,16 @@ import { showSuccessToast, showErrorToast } from "@/components/ui/shadcn/sonner"
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 
+interface PasswordResetErrorResponse {
+  password?: string[];
+  password_confirmation?: string[];
+}
+
 const PasswordResetPage = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<PasswordResetErrorResponse>({});
 
   const { request } = useApiClient();
   const { handleClientError } = useClientErrorHandler();
@@ -23,6 +29,7 @@ const PasswordResetPage = () => {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
+    setFieldErrors({});
 
     // NOTE: リセットメール内のリンク押下で遷移先ページURLに `reset_password_token` が自動付与される
     // APIリクエストに含めるリセットトークンを取得
@@ -54,7 +61,16 @@ const PasswordResetPage = () => {
         setPasswordConfirmation("");
         router.push("/");
       } else {
-        handleClientError(res.status);
+        if (res.status === 422) {
+          const errors = res.data?.errors as PasswordResetErrorResponse;
+
+          setFieldErrors({
+            password: errors.password ?? [],
+            password_confirmation: errors.password_confirmation ?? [],
+          });
+        } else {
+          handleClientError(res.status);
+        }
       }
     } catch (e) {
       if (process.env.NODE_ENV !== "production") {
@@ -75,15 +91,23 @@ const PasswordResetPage = () => {
             type="password"
             placeholder="新しいパスワード"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setFieldErrors((prev) => ({ ...prev, password: [] }));
+            }}
             required
+            errorMessages={fieldErrors.password}
           />
           <InputField
             type="password"
             placeholder="新しいパスワード確認用"
             value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            onChange={(e) => {
+              setPasswordConfirmation(e.target.value)
+              setFieldErrors((prev) => ({ ...prev, password_confirmation: [] }));
+            }}
             required
+            errorMessages={fieldErrors.password_confirmation}
           />
         </div>
 
