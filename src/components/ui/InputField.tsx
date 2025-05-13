@@ -5,12 +5,14 @@ interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: string;
   placeholder: string;
   value: string;
+  errorMessages?: string[];
 }
 
 export default function InputField({
   type,
   placeholder,
   value,
+  errorMessages = [],
   ...rest
 }: InputFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,12 +25,21 @@ export default function InputField({
       <input
         type={showPassword ? "text" : type}
         placeholder={placeholder}
-        className="w-full rounded-md border border-gray-400 px-4 py-2 pr-10"
         value={value}
+        className={`w-full rounded-md border px-4 py-2 pr-10 ${
+          errorMessages.length > 0 ? "border-red-500" : "border-gray-400"
+        }`}
         {...rest}
       />
+      {errorMessages.length > 0 && (
+        <div className="text-sm text-red-600 space-y-1 mt-2">
+          {errorMessages.map((msg, idx) => (
+            <div key={idx}>{msg}</div>
+          ))}
+        </div>
+      )}
 
-      {isPasswordType && hasValue && (
+      {isPasswordType && hasValue && errorMessages.length === 0 && (
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}

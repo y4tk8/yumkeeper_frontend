@@ -10,11 +10,18 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 import GuestSignInDialog from "@/components/auth/GuestSignInDialog";
 
+interface SignUpErrorResponse {
+  email?: string[];
+  password?: string[];
+  password_confirmation?: string[];
+}
+
 export default function SingUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<SignUpErrorResponse>({});
   const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
 
   const { request } = useApiClient();
@@ -27,6 +34,7 @@ export default function SingUpPage() {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
+    setFieldErrors({});
 
     const payload = {
       email,
@@ -41,7 +49,17 @@ export default function SingUpPage() {
         showSuccessToast("アカウント認証メールを送信しました");
         router.push("/verify-account");
       } else {
-        handleClientError(res.status);
+        if (res.status === 422) {
+          const errors = res.data?.errors as SignUpErrorResponse;
+
+          setFieldErrors({
+            email: errors.email ?? [],
+            password: errors.password ?? [],
+            password_confirmation: errors.password_confirmation ?? [],
+          });
+        } else {
+          handleClientError(res.status);
+        }
       }
     } catch (e) {
       if (process.env.NODE_ENV !== "production") {
@@ -63,22 +81,34 @@ export default function SingUpPage() {
               type="email"
               placeholder="メールアドレス"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, email: [] }));
+              }}
               required
+              errorMessages={fieldErrors.email}
             />
             <InputField
               type="password"
               placeholder="パスワード"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) =>{
+                setPassword(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, password: [] }));
+              }}
               required
+              errorMessages={fieldErrors.password}
             />
             <InputField
               type="password"
               placeholder="パスワード確認用"
               value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              onChange={(e) => {
+                setPasswordConfirmation(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, password_confirmation: [] }));;
+              }}
               required
+              errorMessages={fieldErrors.password_confirmation}
             />
           </div>
 
