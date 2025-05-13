@@ -52,7 +52,34 @@ export default function Home() {
       {/* メインコピー */}
       <h1 className="text-7xl font-bold text-left text-gray-800">
         料理レシピは活字より、<br />
-        <span className="inline-block w-full text-gray-800 text-right mt-8">動画派のあなたへ。</span>
+        <span className="inline-block w-full text-gray-800 text-right mt-8">
+          <span className="relative inline-block">
+
+            {/* 「動画」のアニメーション表示 + 下線 */}
+            <span className="relative inline-block">
+              <span
+                className="opacity-0 animate-fade-in"
+                style={{
+                  animationDelay: "1s",
+                  animationDuration: "1s",
+                  animationFillMode: "forwards"
+                }}
+              >
+                動画
+              </span>
+              <span
+                className="absolute -bottom-2 left-0 h-[4px] bg-red-800 w-0 animate-underline"
+                style={{
+                  animationDelay: "1.5s",
+                  animationDuration: "0.5s",
+                  animationFillMode: "forwards"
+                }}
+              />
+            </span>
+
+            派のあなたへ。
+          </span>
+        </span>
       </h1>
 
       {/* サブコピー */}
