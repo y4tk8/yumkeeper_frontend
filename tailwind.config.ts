@@ -56,8 +56,22 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
-  	}
+  		},
+			keyframes: {
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' },
+				},
+				'underline': {
+					'0%': { width: '0%' },
+					'100%': { width: '100%' },
+				}
+			},
+			animation: {
+				'fade-in': 'fade-in 1s ease forwards',
+				'underline': 'underline 0.5s ease forwards',
+			},
+  	},
   },
   plugins: [animatePlugin],
 } satisfies Config;
