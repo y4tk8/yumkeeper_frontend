@@ -105,7 +105,7 @@ export default function SingUpPage() {
               value={passwordConfirmation}
               onChange={(e) => {
                 setPasswordConfirmation(e.target.value);
-                setFieldErrors((prev) => ({ ...prev, password_confirmation: [] }));;
+                setFieldErrors((prev) => ({ ...prev, password_confirmation: [] }));
               }}
               required
               errorMessages={fieldErrors.password_confirmation}
