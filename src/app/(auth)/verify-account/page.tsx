@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
 
 const VerifyAccountPage = () => {
   return (
     <>
       <div className="text-center space-y-10">
         <h2 className="text-xl">登録ありがとうございます</h2>
-        <h2 className="text-2xl font-semibold mb-6">本登録を完了するにはメールを認証してください</h2>
+
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <AlertTriangle className="w-8 h-8 text-yellow-500"/>
+          <h2 className="text-2xl font-semibold">本登録を完了するにはメールを認証してください</h2>
+        </div>
+
         <ul className="text-gray-600 text-sm list-disc list-inside mb-6 text-left">
           <li>通常、メールは数分以内に届きます。</li>
           <li>メールが見つからない場合、迷惑メールフォルダに振り分けられていることがあります。</li>
