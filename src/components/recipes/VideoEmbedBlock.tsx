@@ -17,6 +17,7 @@ interface VideoProps {
 export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onReplace }: VideoProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
+  const [videoErrors, setVideoErrors] = useState<string[]>([]);
 
   // YouTube Data API へリクエストを送る関数
   const fetchVideoInfo = async (videoId: string): Promise<Video | null> => {
@@ -44,10 +45,26 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
 
   // 入力したURLの動画情報を取得する関数
   const handleConfirmUrl = async () => {
-    const videoId = new URL(videoUrl).searchParams.get("v"); // URLをパース（v=XXX を抜き出して iframe URL に変換）
+    setVideoErrors([]);
 
-    if (!videoId) {
-      alert("無効なURLです");
+    if (videoUrl.trim() === "") {
+      setVideoErrors(["URLを入力してください"]);
+      return;
+    }
+
+    let videoId: string | null = null;
+
+    try {
+      // URLをパース（v=XXX を抜き出して iframe URL に変換）
+      const parsedURL = new URL(videoUrl);
+      videoId = parsedURL.searchParams.get("v");
+
+      if (!videoId) {
+        setVideoErrors(["無効なYouTube動画URLです"]);
+        return;
+      }
+    } catch {
+      setVideoErrors(["無効なURL形式です"]);
       return;
     }
 
@@ -55,17 +72,17 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
       const info = await fetchVideoInfo(videoId);
 
       if (!info) {
-        alert("動画が見つかりませんでした");
+        setVideoErrors(["動画が見つかりませんでした"]);
         return;
       }
 
       if (!info.is_embeddable) {
-        alert("この動画は埋め込みできません");
+        setVideoErrors(["この動画は埋め込みが許可されていません"]);
         return;
       }
 
       if (info.status === "private") {
-        alert("この動画は非公開です");
+        setVideoErrors(["この動画は非公開です"]);
         return;
       }
 
@@ -76,19 +93,26 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
         setVideoInfo(info);
       }
 
-    } catch (e) {
-      alert("動画情報の取得中にエラーが発生しました");
-      console.error(e);
-    } finally {
       setIsModalOpen(false);
       setVideoUrl("");
+    } catch (e) {
+      setVideoErrors(["動画の取得中にエラーが発生しました"]);
+
+      if (process.env.NODE_ENV !== "production") {
+        console.error("APIエラー:", e)
+      }
     }
   };
 
-  const handleOpenModal = () => setIsModalOpen(true);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    setVideoErrors([]);
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setVideoUrl("");
+    setVideoErrors([]);
   };
 
   return (
@@ -131,13 +155,17 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
         <div className="fixed inset-0 flex items-center justify-center">
           <DialogPanel className="bg-white p-8 rounded-md max-w-md w-full shadow-md">
             <DialogTitle className="text-lg font-semibold mb-4">URLを入力してください</DialogTitle>
+
             <InputField
               type="text"
               placeholder="https://www.youtube.com"
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
+              errorMessages={videoErrors}
             />
+
             <p className="text-sm text-gray-400 pt-2">※ショート動画は指定できません</p>
+
             <div className="flex justify-between mt-8">
               <Button variant="outline" onClick={handleCloseModal}>キャンセル</Button>
               <Button variant="secondary" onClick={handleConfirmUrl}>OK</Button>
