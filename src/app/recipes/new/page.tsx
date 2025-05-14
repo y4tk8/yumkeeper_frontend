@@ -25,6 +25,7 @@ export default function RecipeNewPage() {
   const [notes, setNotes] = useState("");
   const [videoInfo, setVideoInfo] = useState<Video | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nameError, setNameError] = useState<string[]>([]);
 
   const { request, userId } = useApiClient();
   const { handleClientError } = useClientErrorHandler();
@@ -66,6 +67,7 @@ export default function RecipeNewPage() {
     if (isSubmitting) return; // 二重送信防止
 
     setIsSubmitting(true);
+    setNameError([]);
 
     try {
       const ingredientsData = mapItems(ingredients, "ingredient");
@@ -74,7 +76,8 @@ export default function RecipeNewPage() {
 
       const payload = {
         recipe: {
-          name, notes,
+          name,
+          notes,
           ingredients_attributes: [...ingredientsData, ...seasoningsData],
           video_attributes: videoAttributes,
         },
@@ -84,10 +87,13 @@ export default function RecipeNewPage() {
 
       if (res.ok) {
         showSuccessToast(res.data.message || "レシピが追加されました");
-
         router.push("/recipes/index");
       } else {
         handleClientError(res.status, res.data.error);
+
+        if (res.status === 422 && res.data.details) {
+          setNameError(res.data.details);
+        }
       }
     } catch (e) {
       if (process.env.NODE_ENV !== "production") {
@@ -110,6 +116,7 @@ export default function RecipeNewPage() {
             placeholder="レシピ名"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            errorMessages={nameError}
           />
         </div>
       </section>
