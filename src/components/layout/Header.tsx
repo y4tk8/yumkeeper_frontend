@@ -1,14 +1,14 @@
 "use client";
 
 import { useContext } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 import { useApiClient } from "@/hooks/useApiClient";
 import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { AuthContext } from "@/contexts/AuthContext";
-import Link from "next/link";
-import Image from "next/image";
-import { Plus } from "lucide-react";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/shadcn/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/shadcn/popover";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 
 export default function Header() {

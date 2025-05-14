@@ -1,7 +1,7 @@
 "use client";
 
-import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 import { MinusCircle, PlusCircle } from "lucide-react";
+import { ItemEntry, ItemEntryWithoutId } from "@/types/recipe";
 
 interface SeasoningFieldProps {
   index: number;

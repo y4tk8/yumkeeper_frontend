@@ -1,6 +1,6 @@
 import { parseAmountToQuantityAndUnit } from "@/utils/parseAmount";
-import { ItemEntry } from "@/types/recipe";
 import { Ingredient } from "@/types/ingredient";
+import { ItemEntry } from "@/types/recipe";
 
 // 材料・調味料の入力値 -> API送信用へ map で整形
 export const mapItems = (

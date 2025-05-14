@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useApiClient } from "@/hooks/useApiClient";
 import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
-import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+import InputField from "@/components/ui/InputField";
 
 interface PasswordChangeErrorResponse {
   current_password?: string[];
