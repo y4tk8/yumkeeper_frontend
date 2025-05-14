@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { MinusCircle } from "lucide-react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Video, VideoWithoutId } from "@/types/video";
-import { MinusCircle } from "lucide-react";
-import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+import InputField from "@/components/ui/InputField";
 
 interface VideoProps {
   videoInfo: Video | null;

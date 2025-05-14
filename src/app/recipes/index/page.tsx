@@ -1,20 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronDown, Check, Loader2 } from "lucide-react";
 import { useApiClient } from "@/hooks/useApiClient";
 import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { useErrorToast } from "@/hooks/useErrorToast";
-import { RecipeCard } from "@/types/recipe";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { apiResult } from "@/types/api";
+import { RecipeCard } from "@/types/recipe";
 import { Pagination } from "@/components/ui/Pagination";
-import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/shadcn/dialog";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/shadcn/popover";
-import { ChevronDown, Check, Loader2 } from "lucide-react";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 import Button from "@/components/ui/Button";
 
 const SORT_OPTIONS = [

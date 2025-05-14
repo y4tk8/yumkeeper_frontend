@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Toaster } from "@/components/ui/shadcn/sonner";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import ScrollToTopOnRouteChange from "@/components/layout/ScrollToTopOnRouteChange";
+import { Toaster } from "@/components/ui/shadcn/sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {

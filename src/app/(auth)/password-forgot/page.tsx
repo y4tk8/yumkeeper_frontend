@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useApiClient } from "@/hooks/useApiClient";
 import { useClientErrorHandler } from "@/hooks/useClientErrorHandler";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
-import Link from "next/link";
-import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+import InputField from "@/components/ui/InputField";
 
 const PasswordForgotPage = () => {
   const [email, setEmail] = useState("");
