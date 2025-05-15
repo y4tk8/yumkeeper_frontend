@@ -1,12 +1,30 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Plus } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
+import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 
 export default function Home() {
   const context = useContext(AuthContext);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // 認証完了クエリが存在する場合、成功トーストを表示
+  useEffect(() => {
+    const confirmed = searchParams.get("account_confirmation_success");
+    if (confirmed === "true") {
+      setTimeout(() => {
+        showSuccessToast("アカウントが正常に認証されました");
+      }, 0);
+
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete("account_confirmation_success");
+      router.replace(`/?${newParams.toString()}`);
+    }
+  }, [searchParams]);
 
   // AuthProvider のラップ漏れチェック
   if (!context) {
