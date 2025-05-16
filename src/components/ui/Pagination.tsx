@@ -21,7 +21,10 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
     if (currentPage > 1) {
       items.push(
         <PaginationItem key="prev">
-          <PaginationPrevious onClick={() => onPageChange(currentPage - 1)} />
+          <PaginationPrevious
+            className="cursor-pointer"
+            onClick={() => onPageChange(currentPage - 1)}
+          />
         </PaginationItem>
       );
     }
@@ -32,7 +35,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
     if (startPage > 1) {
       items.push(
         <PaginationItem key="first">
-          <PaginationLink onClick={() => onPageChange(1)}>1</PaginationLink>
+          <PaginationLink
+            className="cursor-pointer"
+            onClick={() => onPageChange(1)}
+          >
+            1
+          </PaginationLink>
         </PaginationItem>
       );
 
@@ -48,7 +56,11 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
     for (let i = startPage; i <= endPage; i++) {
       items.push(
         <PaginationItem key={i}>
-          <PaginationLink isActive={i === currentPage} onClick={() => onPageChange(i)}>
+          <PaginationLink
+            className="cursor-pointer"
+            isActive={i === currentPage}
+            onClick={() => onPageChange(i)}
+          >
             {i}
           </PaginationLink>
         </PaginationItem>
@@ -66,7 +78,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
 
       items.push(
         <PaginationItem key="last">
-          <PaginationLink onClick={() => onPageChange(totalPages)}>{totalPages}</PaginationLink>
+          <PaginationLink
+            className="cursor-pointer"
+            onClick={() => onPageChange(totalPages)}
+          >
+            {totalPages}
+          </PaginationLink>
         </PaginationItem>
       );
     }
@@ -74,7 +91,10 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
     if (currentPage < totalPages) {
       items.push(
         <PaginationItem key="next">
-          <PaginationNext onClick={() => onPageChange(currentPage + 1)} />
+          <PaginationNext
+            className="cursor-pointer"
+            onClick={() => onPageChange(currentPage + 1)}
+          />
         </PaginationItem>
       );
     }
