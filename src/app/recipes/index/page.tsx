@@ -54,17 +54,17 @@ export default function RecipeIndexPage() {
 
         if (!res.ok) {
           handleClientError(res.status);
+          return;
         }
 
         // ページネーション情報を取得
         const headers = res.headers;
-        setPagination({
-          page: Number(headers.get("Current-Page")),
-          limit: Number(headers.get("Page-Items")),
-          count: Number(headers.get("Total-Count")),
-          totalPages: Number(headers.get("Total-Pages")),
-        });
+        const page = Number(headers.get("current-page") || "1");
+        const limit = Number(headers.get("page-items") || "20");
+        const count = Number(headers.get("total-count") || "0");
+        const totalPages = Number(headers.get("total-pages") || "1");
 
+        setPagination({ page, limit, count, totalPages });
         setRecipes(res.data.recipes);
       } catch (e) {
         if (process.env.NODE_ENV !== "production") {
@@ -77,6 +77,11 @@ export default function RecipeIndexPage() {
 
     fetchRecipes();
   }, [userId, currentPage, selectedSort]);
+
+  // ページ遷移時にスクロール位置をリセット
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [currentPage]);
 
   // レシピの削除処理
   const deleteRecipe = async () => {
