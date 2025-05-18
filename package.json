@@ -9,7 +9,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "npx prettier . --check",
-    "format:write": "npx prettier . --white"
+    "format:write": "npx prettier . --write",
+    "test": "vitest"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.1",
@@ -39,6 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
     "cypress": "^14.3.3",
     "cypress-localstorage-commands": "^2.2.7",
