@@ -18,7 +18,8 @@ export default function InputField({
   const [showPassword, setShowPassword] = useState(false);
 
   const isPasswordType = type === "password";
-  const hasValue = typeof value === "string" && value.length > 0;
+  const hasValue = typeof value === "string" && value.trim().length > 0;
+  const showToggleButton = isPasswordType && hasValue && (!errorMessages || errorMessages.length === 0);
 
   return (
     <div className="relative w-full">
@@ -39,9 +40,10 @@ export default function InputField({
         </div>
       )}
 
-      {isPasswordType && hasValue && errorMessages.length === 0 && (
+      {showToggleButton && (
         <button
           type="button"
+          aria-label="パスワード表示切り替え"
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
         >
