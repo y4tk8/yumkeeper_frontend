@@ -193,6 +193,7 @@ export default function RecipeEditPage() {
             placeholder="レシピ名"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            aria-label="レシピ名入力"
             errorMessages={nameError}
           />
         </div>
