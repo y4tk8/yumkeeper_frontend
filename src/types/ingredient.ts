@@ -4,4 +4,5 @@ export interface Ingredient {
   quantity: number | null;
   unit: string;
   category: "ingredient" | "seasoning";
+  _destroy?: boolean;
 }
