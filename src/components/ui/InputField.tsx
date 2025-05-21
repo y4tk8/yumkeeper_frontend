@@ -33,7 +33,7 @@ export default function InputField({
         {...rest}
       />
       {errorMessages.length > 0 && (
-        <div className="text-sm text-red-600 space-y-1 mt-2">
+        <div className="text-sm text-red-600 space-y-1 mt-2" role="error">
           {errorMessages.map((msg, idx) => (
             <div key={idx}>{msg}</div>
           ))}
