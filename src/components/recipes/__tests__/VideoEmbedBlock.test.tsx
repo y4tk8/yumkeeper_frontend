@@ -1,10 +1,10 @@
+import React, { act, useState } from "react";
 import { describe, expect, it, vi, beforeEach, beforeAll, afterEach, afterAll } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import VideoEmbedBlock from "@/components/recipes/VideoEmbedBlock";
-import React, { act, useState } from "react";
 import { Video } from "@/types/video";
 
 const mockSetVideoInfo = vi.fn();
