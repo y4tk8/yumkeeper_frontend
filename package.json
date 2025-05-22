@@ -10,7 +10,9 @@
     "lint:fix": "next lint --fix",
     "format": "npx prettier . --check",
     "format:write": "npx prettier . --write",
-    "test": "vitest"
+    "test": "vitest",
+    "e2e": "cypress run",
+    "e2e:gui": "cypress open"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.1",
