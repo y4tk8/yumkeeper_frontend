@@ -1,1 +1,1 @@
-import "./commands/auth";
+import "./commands/auth/index";
