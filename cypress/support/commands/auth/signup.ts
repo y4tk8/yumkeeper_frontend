@@ -18,7 +18,7 @@ Cypress.Commands.add("mockConfirmationEmail", (user) => {
     body: [
       {
         subject: "アカウントを認証してください",
-        body: `<a href="http://localhost:3000/?account_confirmation_success=true">認証する</a>`,
+        body: `<a href="http://localhost:3000/?account_confirmation_success=true">アカウントを認証する</a>`,
       },
     ],
   }).as("fetchEmail");

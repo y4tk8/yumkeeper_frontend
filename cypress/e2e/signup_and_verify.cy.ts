@@ -11,7 +11,7 @@ describe("正常系: サインアップから認証完了まで", () => {
     });
   });
 
-  it("サインアップ -> メール送信 -> 認証リンク押下 -> リダイレクト & トースト表示", () => {
+  it("サインアップ -> 認証メール送信 -> リンク押下 -> リダイレクト & トースト表示", () => {
     cy.mockSignupAPI();
 
     cy.signupViaUI(user);
@@ -21,12 +21,10 @@ describe("正常系: サインアップから認証完了まで", () => {
     cy.url().should("include", "/verify-account");
     cy.contains("登録ありがとうございます");
 
-    // モックで認証メールを取得
     cy.mockConfirmationEmail(user);
 
     cy.clickConfirmationLink();
 
-    // トップページへのリダイレクト & トースト表示
     cy.url().should("eq", `${Cypress.config().baseUrl}/`);
     cy.contains("アカウントが正常に認証されました").should("be.visible");
   });

@@ -11,5 +11,15 @@ declare namespace Cypress {
     mockConfirmationEmail(user: { email: string }): Chainable<void>;
 
     clickConfirmationLink(): Chainable<void>;
+
+    mockPasswordForgotAPI(): Chainable<void>;
+
+    mockPasswordResetEmail(user: { email: string }): Chainable<void>;
+
+    clickResetLink(): Chainable<void>;
+
+    mockPasswordResetAPI(user: { email: string }): Chainable<void>;
+
+    mockSigninAPI(user: { email: string }): Chainable<void>;
   }
 }
