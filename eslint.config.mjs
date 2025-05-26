@@ -29,8 +29,8 @@ const eslintConfig = [
       "react/jsx-no-useless-fragment": "warn", // 不要な <></> を警告
       "react/jsx-boolean-value": ["warn", "never"], // e.g. <Component isLoading={true} />を警告。`={true}` は不要。
       "react/self-closing-comp": "warn", // e.g. <img></img> を <img />にするよう警告
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn", // useEffectの依存配列の設定ミスを警告
+      "react-hooks/exhaustive-deps": "off", // フックの依存配列の漏れを警告。 NOTE: このルールに従うとバグが多数出たためオフに。
+      "react-hooks/rules-of-hooks": "error", // フック呼び出し時の構文ミスはエラー
 
       // Tailwind
       "tailwindcss/no-custom-classname": "off", // カスタムクラスの使用を許容
