@@ -52,7 +52,7 @@ export default function VideoEmbedBlock({ videoInfo, setVideoInfo, onDelete, onR
       return;
     }
 
-    let videoId: string | null = null;
+    let videoId: string | null;
 
     try {
       // URLをパース（v=XXX を抜き出して iframe URL に変換）
