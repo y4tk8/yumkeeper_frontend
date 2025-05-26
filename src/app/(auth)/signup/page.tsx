@@ -128,7 +128,7 @@ export default function SingUpPage() {
 
         {/* 区切り線 */}
         <div className="relative">
-          <span className="absolute inset-x-8 h-px bg-gray-300"></span>
+          <div className="absolute inset-x-8 h-px bg-gray-300" />
         </div>
 
         <Button
