@@ -7,7 +7,7 @@ describe("正常系: パスワードリセットからサインインまで", ()
 
   const newPassword = "newPassword123";
 
-  beforeEach(() => {
+  before(() => {
     cy.fixture("user").then((u) => {
       user = u;
     });

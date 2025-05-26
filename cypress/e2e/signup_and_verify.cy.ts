@@ -5,7 +5,7 @@ describe("正常系: サインアップから認証完了まで", () => {
     password_confirmation: string;
   };
 
-  beforeEach(() => {
+  before(() => {
     cy.fixture("user").then((newUser) => {
       user = newUser;
     });
