@@ -98,16 +98,12 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Check if .next exists
-        run: |
-          ls -la
-          du -sh .next || echo ".next does not exist"
-
       - name: Upload .next directory
         uses: actions/upload-artifact@v4
         with:
           name: next-build
-          path: .next/**/*
+          path: .next/
+          include-hidden-files: true
 
   e2e:
     runs-on: ubuntu-latest
@@ -129,9 +125,6 @@ jobs:
         with:
           name: next-build
           path: .next/
-
-      - name: Check downloaded .next directory
-        run: ls -la .next || echo "No .next directory found"
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
