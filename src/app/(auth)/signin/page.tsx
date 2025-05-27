@@ -142,7 +142,7 @@ export default function SingInPage() {
 
         {/* 区切り線 */}
         <div className="relative">
-          <div className="absolute inset-x-8 h-px bg-gray-300"></div>
+          <div className="absolute inset-x-8 h-px bg-gray-300" />
         </div>
 
         <Button

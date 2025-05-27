@@ -25,6 +25,7 @@ describe("正常系: サインアップから認証完了まで", () => {
 
     cy.clickConfirmationLink();
 
+    cy.url().should("not.include", "account_confirmation_success"); // router.replace の完了まで待機
     cy.url().should("eq", `${Cypress.config().baseUrl}/`);
     cy.contains("アカウントが正常に認証されました").should("be.visible");
   });

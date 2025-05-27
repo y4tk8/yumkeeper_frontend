@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
+    "typecheck": "tsc --noEmit",
     "format": "npx prettier . --check",
     "format:write": "npx prettier . --write",
     "test": "vitest",

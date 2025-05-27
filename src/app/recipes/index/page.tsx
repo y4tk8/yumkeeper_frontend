@@ -145,7 +145,7 @@ export default function RecipeIndexPage() {
                     {option.value === selectedSort ? (
                       <Check className="w-4 h-4 mr-2" />
                     ) : (
-                      <span className="w-4 h-4 mr-2"></span>
+                      <span className="w-4 h-4 mr-2" />
                     )}
                     {option.label}
                   </button>

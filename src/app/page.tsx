@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -8,6 +8,14 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { showSuccessToast } from "@/components/ui/shadcn/sonner";
 
 export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <ActualHome />
+    </Suspense>
+  );
+}
+
+function ActualHome () {
   const context = useContext(AuthContext);
   const router = useRouter();
   const searchParams = useSearchParams();
