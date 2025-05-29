@@ -41,10 +41,6 @@ export default function Button({
         return disabled
           ? "border border-emerald-500 text-emerald-500"
           : "border border-emerald-500 text-emerald-500 hover:bg-emerald-50"
-      case "pagination":
-        return disabled
-        ? "border border-gray-300 text-gray-400"
-        : "border border-gray-400 text-gray-700 hover:bg-gray-100";
       default:
         return "";
     }
