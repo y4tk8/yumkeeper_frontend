@@ -8,6 +8,19 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: "./vitest-setup.ts",
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "**/*.d.ts",
+        "src/**/__tests__/**",
+        "node_modules/",
+        "vite.config.ts",
+        "vitest-setup.ts"
+      ],
+      reportsDirectory: "coverage",
+      reporter: ["text", "html"] // CLI出力 + HTMLレポート
+    }
   },
   resolve: {
     alias: {
