@@ -1,4 +1,4 @@
-- フロントエンドリポジトリは[こちら](https://github.com/y4tk8/yumkeeper_frontend)です  
+- バックエンドリポジトリは[こちら](https://github.com/y4tk8/yumkeeper_backend)です  
 - ドキュメントリポジトリは[こちら](https://github.com/y4tk8/yumkeeper_docs)です
 
 # Yum Keeper - 動画特化の料理レシピ保存サービス
